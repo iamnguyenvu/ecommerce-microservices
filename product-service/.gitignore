@@ -4,11 +4,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# Implementation guides and documentation
-*_GUIDE.md
-*_IMPLEMENTATION_GUIDE.md
-SERVICE_*.md
-
 ### STS ###
 .apt_generated
 .classpath
