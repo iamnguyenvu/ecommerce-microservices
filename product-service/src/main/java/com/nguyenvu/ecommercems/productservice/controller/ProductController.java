@@ -1,7 +1,7 @@
-﻿package com.nguyenvu.ecommercems.productService.controller;
+package com.nguyenvu.ecommercems.productservice.controller;
 
-import com.nguyenvu.ecommercems.productService.dto.*;
-import com.nguyenvu.ecommercems.productService.service.product.ProductService;
+import com.nguyenvu.ecommercems.productservice.dto.*;
+import com.nguyenvu.ecommercems.productservice.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -106,7 +106,7 @@ public class ProductController {
         log.info("POST /api/v1/products - title: {}", ProductDTO.getTitle());
         
         ProductDTO savedProduct = productService.saveBook(ProductDTO);
-        return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
     /**
@@ -122,7 +122,7 @@ public class ProductController {
         log.info("PUT /api/v1/products/{} - title: {}", id, ProductDTO.getTitle());
         
         ProductDTO updatedProduct = productService.updateBook(id, ProductDTO);
-        return ResponseEntity.ok(updatedBook);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     /**
@@ -410,7 +410,7 @@ public class ProductController {
             Map<String, Object> response = Map.of(
                 "available", false,
                 "message", "Product code already exists",
-                "existingBookId", existingBook.getId()
+                "existingProductId", existingProduct.getId()
             );
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -582,7 +582,7 @@ public class ProductController {
             
             ApiResponse errorResponse = ApiResponse.builder()
                     .success(false)
-                    .message("KhÃ´ng thá»ƒ kiá»ƒm tra quyá»n Ä‘Ã¡nh giÃ¡: " + e.getMessage())
+                    .message("Không thể kiểm tra quyền đánh giá: " + e.getMessage())
                     .build();
                     
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -613,7 +613,7 @@ public class ProductController {
             if (request.getRating() < 1 || request.getRating() > 5) {
                 return ResponseEntity.badRequest().body(ApiResponse.builder()
                         .success(false)
-                        .message("ÄÃ¡nh giÃ¡ pháº£i tá»« 1 Ä‘áº¿n 5 sao")
+                        .message("Đánh giá phải từ 1 đến 5 sao")
                         .build());
             }
 

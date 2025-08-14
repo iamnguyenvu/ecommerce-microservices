@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.product.validation;
+package com.nguyenvu.ecommercems.productservice.service.product.validation;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.model.embedded.Supplier;
@@ -85,13 +85,13 @@ public class ProductValidator {
             throw new ProductValidationException("Product pricing information is required");
         }
         
-        if (Product.getPublisher() == null) {
+        if (Product.getManufacturer() == null) {
             throw new ProductValidationException("Product Manufacturer information is required");
         }
         
-        // ISBN is optional but if provided must be valid
-        if (StringUtils.hasText(Product.getIsbn())) {
-            isbnValidator.validate(Product.getIsbn());
+        // SKU is optional but if provided must be valid
+        if (StringUtils.hasText(Product.getSku())) {
+            validateSKU(Product.getSku());
         }
     }
 
@@ -103,9 +103,9 @@ public class ProductValidator {
         validateSuppliers(Product.getSuppliers());
         validateCategories(Product.getCategories());
         validatePricing(Product.getPricing());
-        validatePublisher(Product.getPublisher());
-        validatePublishedDate(Product.getPublishedDate());
-        validateHotReleaseTime(Product.getReleaseTime(), Product.getPublishedDate());
+        validateManufacturer(Product.getManufacturer());
+        validateReleaseDate(Product.getReleaseDate());
+        validateLaunchTime(Product.getLaunchTime(), Product.getReleaseDate());
         validateStock(Product.getStockQuantity());
         validateDescription(Product.getDescription());
     }
@@ -202,34 +202,34 @@ public class ProductValidator {
     }
 
     /**
-     * Validate release time (chá»‰ cho sÃ¡ch cá»±c ká»³ hot cÃ³ thá»i Ä‘iá»ƒm má»Ÿ bÃ¡n chÃ­nh xÃ¡c)
+     * Validate release time (chỉ cho sách cực kỳ hot có thời điểm mở bán chính xác)
      */
     private void validateHotReleaseTime(LocalDateTime releaseTime, LocalDate publishedDate) {
         if (releaseTime != null) {
-            // Release time pháº£i cÃ³ publishedDate
+            // Release time phải có publishedDate
             if (publishedDate == null) {
                 throw new ProductValidationException("Published date is required when release time is specified");
             }
             
-            // Release time pháº£i cÃ¹ng ngÃ y vá»›i publishedDate
+            // Release time phải cùng ngày với publishedDate
             if (!releaseTime.toLocalDate().equals(publishedDate)) {
                 throw new ProductValidationException("Release time must be on the same date as published date");
             }
             
             LocalDateTime now = LocalDateTime.now();
             
-            // Pháº£i lÃªn lá»‹ch trÆ°á»›c Ã­t nháº¥t 2 giá» cho hot release
+            // Phải lên lịch trước ít nhất 2 giờ cho hot release
             if (releaseTime.isBefore(now.plusHours(2))) {
                 throw new ProductValidationException("Hot release must be scheduled at least 2 hours in advance");
             }
             
-            // Khuyáº¿n cÃ¡o khung giá» há»£p lÃ½ cho hot release (8:00 - 22:00)
+            // Khuyến cáo khung giờ hợp lý cho hot release (8:00 - 22:00)
             int hour = releaseTime.getHour();
             if (hour < 8 || hour > 22) {
                 log.warn("Hot release scheduled for {}:00 - consider scheduling between 8:00-22:00 for better user engagement", hour);
             }
             
-            // KhÃ´ng nÃªn lÃªn lá»‹ch quÃ¡ xa trong tÆ°Æ¡ng lai
+            // Không nên lên lịch quá xa trong tương lai
             if (releaseTime.isAfter(now.plusMonths(6))) {
                 throw new ProductValidationException("Release time cannot be more than 6 months in the future");
             }
@@ -266,10 +266,10 @@ public class ProductValidator {
      * Validate uniqueness for new products
      */
     private void validateUniqueness(ProductDTO Product) {
-        // Check ISBN uniqueness
-        if (StringUtils.hasText(Product.getIsbn())) {
-            if (ProductRepository.existsByIsbn(Product.getIsbn())) {
-                throw new ProductValidationException("Product with ISBN '" + Product.getIsbn() + "' already exists");
+        // Check SKU uniqueness
+        if (StringUtils.hasText(Product.getSku())) {
+            if (ProductRepository.existsBySku(Product.getSku())) {
+                throw new ProductValidationException("Product with SKU '" + Product.getSku() + "' already exists");
             }
         }
         
@@ -285,10 +285,10 @@ public class ProductValidator {
      * Validate uniqueness for updates (excluding current Product)
      */
     private void validateUniquenessForUpdate(String currentBookId, ProductDTO Product) {
-        // Check ISBN uniqueness (excluding current Product)
-        if (StringUtils.hasText(Product.getIsbn())) {
-            if (ProductRepository.existsByIsbnAndIdNot(Product.getIsbn(), currentBookId)) {
-                throw new ProductValidationException("Product with ISBN '" + Product.getIsbn() + "' already exists");
+        // Check SKU uniqueness (excluding current Product)
+        if (StringUtils.hasText(Product.getSku())) {
+            if (ProductRepository.existsBySkuAndIdNot(Product.getSku(), currentBookId)) {
+                throw new ProductValidationException("Product with SKU '" + Product.getSku() + "' already exists");
             }
         }
         
@@ -296,6 +296,63 @@ public class ProductValidator {
         if (StringUtils.hasText(Product.getCode())) {
             if (ProductRepository.existsByCodeAndIdNot(Product.getCode(), currentBookId)) {
                 throw new ProductValidationException("Product with code '" + Product.getCode() + "' already exists");
+            }
+        }
+    }
+
+    // ===== NEW E-COMMERCE VALIDATION METHODS =====
+    
+    /**
+     * Validate SKU format
+     */
+    private void validateSKU(String sku) {
+        if (sku.trim().isEmpty()) {
+            throw new ProductValidationException("SKU cannot be empty");
+        }
+        if (sku.length() > 50) {
+            throw new ProductValidationException("SKU cannot exceed 50 characters");
+        }
+        if (!sku.matches("^[A-Z0-9\\-_]+$")) {
+            throw new ProductValidationException("SKU must contain only uppercase letters, numbers, hyphens and underscores");
+        }
+    }
+
+    /**
+     * Validate manufacturer information
+     */
+    private void validateManufacturer(Manufacturer manufacturer) {
+        if (manufacturer != null) {
+            if (!StringUtils.hasText(manufacturer.getManufacturerId())) {
+                throw new ProductValidationException("Manufacturer ID is required");
+            }
+            if (!StringUtils.hasText(manufacturer.getName())) {
+                throw new ProductValidationException("Manufacturer name is required");
+            }
+        }
+    }
+
+    /**
+     * Validate product release date
+     */
+    private void validateReleaseDate(LocalDate releaseDate) {
+        if (releaseDate != null) {
+            LocalDate currentDate = LocalDate.now();
+            if (releaseDate.isAfter(currentDate.plusYears(2))) {
+                throw new ProductValidationException("Release date cannot be more than 2 years in the future");
+            }
+        }
+    }
+
+    /**
+     * Validate launch time for special products
+     */
+    private void validateLaunchTime(LocalDateTime launchTime, LocalDate releaseDate) {
+        if (launchTime != null) {
+            if (releaseDate != null && !launchTime.toLocalDate().equals(releaseDate)) {
+                throw new ProductValidationException("Launch time must be on the same date as release date");
+            }
+            if (launchTime.isAfter(LocalDateTime.now().plusYears(2))) {
+                throw new ProductValidationException("Launch time cannot be more than 2 years in the future");
             }
         }
     }

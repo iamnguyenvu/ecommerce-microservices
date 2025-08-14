@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.product.impl;
+package com.nguyenvu.ecommercems.productservice.service.product.impl;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.dto.ProductSearchCriteria;
@@ -116,33 +116,33 @@ public class ProductSearchServiceImpl extends AbstractProductService implements 
         }
 
         // Supplier filter
-        if (StringUtils.hasText(criteria.getAuthorName())) {
-            query.addCriteria(Criteria.where("Suppliers.name").regex(criteria.getAuthorName(), "i"));
+        if (StringUtils.hasText(criteria.getSupplierName())) {
+            query.addCriteria(Criteria.where("Suppliers.name").regex(criteria.getSupplierName(), "i"));
         }
 
         // Multiple Suppliers filter
-        if (criteria.getAuthorNames() != null && !criteria.getAuthorNames().isEmpty()) {
-            query.addCriteria(Criteria.where("Suppliers.name").in(criteria.getAuthorNames()));
+        if (criteria.getSupplierIds() != null && !criteria.getSupplierIds().isEmpty()) {
+            query.addCriteria(Criteria.where("Suppliers.supplierId").in(criteria.getSupplierIds()));
         }
 
         // Manufacturer filter
-        if (StringUtils.hasText(criteria.getPublisherId())) {
-            query.addCriteria(Criteria.where("Manufacturer.publisherId").is(criteria.getPublisherId()));
+        if (StringUtils.hasText(criteria.getManufacturerId())) {
+            query.addCriteria(Criteria.where("Manufacturer.manufacturerId").is(criteria.getManufacturerId()));
         }
 
         // Manufacturer name filter
-        if (StringUtils.hasText(criteria.getPublisherName())) {
-            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getPublisherName(), "i"));
+        if (StringUtils.hasText(criteria.getManufacturerName())) {
+            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getManufacturerName(), "i"));
         }
 
         // Availability filter
-        if (criteria.getAvailability() != null) {
-            query.addCriteria(Criteria.where("availability").is(criteria.getAvailability()));
+        if (criteria.getAvailabilities() != null && !criteria.getAvailabilities().isEmpty()) {
+            query.addCriteria(Criteria.where("availability").in(criteria.getAvailabilities()));
         }
 
-        // Physical attributes filter
-        if (criteria.getFormat() != null) {
-            query.addCriteria(Criteria.where("physical.format").is(criteria.getFormat()));
+        // Product type filter (replaces format)
+        if (criteria.getProductTypes() != null && !criteria.getProductTypes().isEmpty()) {
+            query.addCriteria(Criteria.where("type").in(criteria.getProductTypes()));
         }
 
         // Rating filter
@@ -161,10 +161,11 @@ public class ProductSearchServiceImpl extends AbstractProductService implements 
             query.addCriteria(Criteria.where("stockQuantity").gt(0));
         }
 
-        // Language filter
-        if (StringUtils.hasText(criteria.getLanguage())) {
-            query.addCriteria(Criteria.where("physical.language").regex(criteria.getLanguage(), "i"));
-        }
+        // Language filter - commented out as not available in new search criteria
+        // TODO: Add language filter to ProductSearchCriteria if needed
+        // if (StringUtils.hasText(criteria.getLanguage())) {
+        //     query.addCriteria(Criteria.where("physical.language").regex(criteria.getLanguage(), "i"));
+        // }
 
         // Series filter
         if (StringUtils.hasText(criteria.getSeriesId())) {
@@ -172,17 +173,13 @@ public class ProductSearchServiceImpl extends AbstractProductService implements 
         }
 
         // Sales filters
-        if (criteria.getMinTotalSold() != null || criteria.getMaxTotalSold() != null) {
-            Criteria totalSoldCriteria = Criteria.where("sales.totalSold");
-            if (criteria.getMinTotalSold() != null) {
-                totalSoldCriteria = totalSoldCriteria.gte(criteria.getMinTotalSold());
-            }
-            if (criteria.getMaxTotalSold() != null) {
-                totalSoldCriteria = totalSoldCriteria.lte(criteria.getMaxTotalSold());
-            }
-            query.addCriteria(totalSoldCriteria);
+        if (criteria.getMinTotalSold() != null) {
+            query.addCriteria(Criteria.where("sales.totalSold").gte(criteria.getMinTotalSold()));
         }
 
+        // Detailed sales tracking filters - commented out as not available in new search criteria
+        // TODO: Add detailed sales tracking to ProductSearchCriteria if needed
+        /*
         if (criteria.getMinDailySold() != null || criteria.getMaxDailySold() != null) {
             Criteria dailySoldCriteria = Criteria.where("sales.dailySold");
             if (criteria.getMinDailySold() != null) {
@@ -215,6 +212,7 @@ public class ProductSearchServiceImpl extends AbstractProductService implements 
             }
             query.addCriteria(monthlySoldCriteria);
         }
+        */
 
         if (StringUtils.hasText(criteria.getSortBy())) {
             Sort.Direction direction = "desc".equalsIgnoreCase(criteria.getSortDirection()) ?

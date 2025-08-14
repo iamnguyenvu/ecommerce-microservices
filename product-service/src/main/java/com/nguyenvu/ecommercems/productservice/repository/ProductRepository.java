@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.repository;
+package com.nguyenvu.ecommercems.productservice.repository;
 
 import com.nguyenvu.ecommercems.productservice.dto.StockMovementDTO;
 import com.nguyenvu.ecommercems.productservice.model.Product;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.nguyenvu.Productstorems.ProductService.repository.QueryConstants.*;
+import static com.nguyenvu.ecommercems.productservice.repository.constants.QueryConstants.*;
 
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
@@ -48,6 +48,12 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{'isbn': ?0, '_id': {'$ne': ?1}}")
     boolean existsByIsbnAndIdNot(String isbn, String id);
+
+    @Query("{'sku': ?0}")
+    boolean existsBySku(String sku);
+
+    @Query("{'sku': ?0, '_id': {'$ne': ?1}}")
+    boolean existsBySkuAndIdNot(String sku, String id);
 
     @Query("{'code': ?0}")
     boolean existsByCode(String code);

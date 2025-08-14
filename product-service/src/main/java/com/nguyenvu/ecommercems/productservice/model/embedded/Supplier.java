@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Supplier {
     private String name;
-    private SupplierRole role;          // "nhà cung cấp chính", "nhà cung cấp phụ", "nhà phân phối"
-    private String country;
+    private SupplierRole role;          // PRIMARY, SECONDARY, BACKUP
+    private String email;               // Contact email
+    private String website;             // Supplier website
+    private String country;             // Supplier country
 }

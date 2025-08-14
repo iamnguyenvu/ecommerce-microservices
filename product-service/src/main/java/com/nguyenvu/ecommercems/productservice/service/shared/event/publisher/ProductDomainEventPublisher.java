@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer;
+package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.ProductCreatedEvent;
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.ProductUpdatedEvent;

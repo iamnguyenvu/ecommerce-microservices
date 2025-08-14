@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.model;
+package com.nguyenvu.ecommercems.productservice.model;
 
 import com.nguyenvu.ecommercems.productservice.model.embedded.*;
 import org.springframework.data.annotation.Id;

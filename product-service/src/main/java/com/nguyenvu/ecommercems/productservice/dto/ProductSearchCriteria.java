@@ -1,7 +1,8 @@
-﻿package com.nguyenvu.ecommercems.productservice.dto;
+package com.nguyenvu.ecommercems.productservice.dto;
 
 import com.nguyenvu.ecommercems.productservice.model.enums.Availability;
-import com.nguyenvu.ecommercems.productservice.model.enums.Format;
+import com.nguyenvu.ecommercems.productservice.model.enums.ProductType;
+import com.nguyenvu.ecommercems.productservice.model.enums.ProductCondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,111 +19,138 @@ import java.util.List;
 public class ProductSearchCriteria {
     
     // ===== TEXT SEARCH =====
-    private String searchText;              // Full-text search in title, description, Suppliers
+    private String searchText;              // Full-text search in name, description, keywords
+    private String nameContains;            // Name contains specific text
+    private String descriptionContains;     // Description contains specific text
     
     // ===== CATEGORY FILTERS =====
     private List<String> categoryIds;       // Multiple category IDs
     private String categoryPath;            // Category hierarchy path
     private String categoryName;            // Category name search
     
-    // ===== Supplier FILTERS =====
-    private String authorName;              // Single Supplier name (partial match)
-    private List<String> authorNames;       // Multiple Supplier names (exact match)
-    private List<String> SupplierRole;        // Supplier roles filter
+    // ===== MANUFACTURER FILTERS =====
+    private String manufacturerId;          // Manufacturer ID (exact match)
+    private String manufacturerName;        // Manufacturer name (partial match)
+    private List<String> manufacturerIds;   // Multiple manufacturer IDs
     
-    // ===== Manufacturer FILTERS =====
-    private String publisherId;             // Manufacturer ID (exact match)
-    private String publisherName;           // Manufacturer name (partial match)
+    // ===== SUPPLIER FILTERS =====
+    private String supplierId;              // Supplier ID (exact match)
+    private String supplierName;            // Supplier name (partial match)
+    private List<String> supplierIds;       // Multiple supplier IDs
     
     // ===== PRICE FILTERS =====
     private BigDecimal minPrice;            // Minimum sale price
     private BigDecimal maxPrice;            // Maximum sale price
     private Boolean hasDiscount;            // Only discounted products
-    private Double discountPercentage;      // Minimum discount percentage
+    private Double minDiscountPercentage;   // Minimum discount percentage
     
     // ===== RATING FILTERS =====
     private Double minRating;               // Minimum average rating
-    private Double maxRating;               // Maximum average rating
     private Integer minReviewCount;         // Minimum number of reviews
     
-    // ===== AVAILABILITY FILTERS =====
-    private Availability availability;       // Stock availability status (ENUM)
+    // ===== AVAILABILITY & STOCK FILTERS =====
+    private List<Availability> availabilities;  // Multiple availability statuses
     private Boolean inStock;                // Only in-stock products
     private Integer minStock;               // Minimum stock quantity
-    private Integer maxStock;               // Maximum stock quantity
+    
+    // ===== PRODUCT TYPE & CONDITION =====
+    private List<ProductType> productTypes;    // Multiple product types (PHYSICAL, DIGITAL, SERVICE)
+    private List<ProductCondition> conditions; // Multiple conditions (NEW, USED, REFURBISHED)
     
     // ===== PHYSICAL PROPERTIES =====
-    private Format format;                  // Product format (ENUM: HARDCOVER, PAPERBACK, etc.)
-    private String ageGroup;                // Target age group
-    private String language;                // Product language
-    private Integer minPages;               // Minimum page count
-    private Integer maxPages;               // Maximum page count
+    private List<String> colors;           // Multiple colors
+    private List<String> sizes;            // Multiple sizes  
+    private List<String> materials;        // Multiple materials
+    private Double minWeight;               // Minimum weight (kg)
+    private Double maxWeight;               // Maximum weight (kg)
     
-    // ===== SERIES FILTERS =====
-    private String seriesId;                // products in specific series
+    // ===== SERIES & VERSION =====
+    private String seriesId;                // Products in specific series
     private String seriesName;              // Series name search
-    private Integer seriesVolume;           // Specific volume in series
-    private Integer minSeriesVolume;        // Minimum series volume
-    private Integer maxSeriesVolume;        // Maximum series volume
+    private String version;                 // Specific version
     
-    // ===== FEATURED FILTERS =====
-    private String featuredType;            // Featured type (new, bestseller, etc.)
+    // ===== FEATURED & STATUS =====
     private Boolean isFeatured;             // Only featured products
-    private Boolean isNewRelease;           // Only new releases
+    private Boolean isNewArrival;           // Only new arrivals
     private Boolean isBestseller;           // Only bestsellers
-    private Boolean isRecommended;          // Only recommended products
+    private Boolean isOnSale;               // Only products on sale
+    private Boolean isActive;               // Only active products
     
     // ===== DATE FILTERS =====
-    private Integer publishedYear;          // Published in specific year
-    private Integer publishedYearFrom;      // Published from year
-    private Integer publishedYearTo;        // Published to year
-    private LocalDateTime publishedAfter;   // Published after date
-    private LocalDateTime publishedBefore;  // Published before date
+    private Integer releaseYear;            // Released in specific year
+    private Integer releaseYearFrom;        // Released from year
+    private Integer releaseYearTo;          // Released to year
     private LocalDateTime createdAfter;     // Created after date
     private LocalDateTime createdBefore;    // Created before date
-    private LocalDateTime updatedAfter;     // Updated after date
-    private LocalDateTime updatedBefore;    // Updated before date
     
-    // ===== CONTENT FILTERS =====
-    private List<String> subjects;          // Product subjects
+    // ===== CONTENT & IDENTIFICATION =====
+    private List<String> keywords;          // Product keywords
     private List<String> tags;              // Product tags
-    private String isbn;                    // ISBN search
-    private String code;                    // Product code search
-    private String edition;                 // Product edition
+    private String sku;                     // SKU search
+    private String barcode;                 // Barcode search
+    private String model;                   // Product model
     
     // ===== SALES FILTERS =====
     private Integer minTotalSold;           // Minimum total sold
-    private Integer maxTotalSold;           // Maximum total sold
-    private Double minSalesRevenue;         // Minimum sales revenue
-    private Double maxSalesRevenue;         // Maximum sales revenue
-    private Integer minDailySold;           // Minimum daily sold
-    private Integer maxDailySold;           // Maximum daily sold
-    private Integer minWeeklySold;          // Minimum weekly sold
-    private Integer maxWeeklySold;          // Maximum weekly sold
-    private Integer minMonthlySold;         // Minimum monthly sold
-    private Integer maxMonthlySold;         // Maximum monthly sold
-    
-    // ===== STATUS FILTERS =====
-    private String status;                  // Product status (ACTIVE, INACTIVE, etc.)
-    private Boolean isActive;               // Only active products
-    
-    // ===== SORTING =====
-    private String sortBy;                  // Sort field (title, price, rating, published, created, stock, sales)
-    private String sortDirection;           // Sort direction (asc, desc)
-    private List<String> multiSort;         // Multiple sort fields
-    
-    // ===== PAGINATION & PERFORMANCE =====
-    private Boolean includeTotalCount;      // Whether to include total count (for performance)
-    private List<String> includeFields;    // Only return specific fields (projection)
-    private List<String> excludeFields;    // Exclude specific fields
-    private Integer maxResults;             // Maximum number of results to return
+    private BigDecimal minSalesRevenue;     // Minimum sales revenue
     
     // ===== ADVANCED FILTERS =====
-    private String titleContains;           // Title contains specific text
-    private String descriptionContains;     // Description contains specific text
     private Boolean hasImages;              // Only products with images
-    private Boolean hasPreview;             // Only products with preview
-    private String difficulty;              // Difficulty level
+    private Boolean hasVideo;               // Only products with video
+    private Boolean hasReviews;             // Only products with reviews
     private String targetAudience;          // Target audience
+    private String ageGroup;                // Target age group
+    private Boolean freeShipping;          // Only products with free shipping
+    private Integer minWarrantyMonths;      // Minimum warranty period
+    
+    // ===== SORTING & PAGINATION =====
+    private String sortBy;                  // Sort field (name, price, rating, created, sales, stock)
+    private String sortDirection;           // Sort direction (asc, desc)
+    private List<String> multiSort;         // Multiple sort criteria: ["price:asc", "rating:desc"]
+    
+    // ===== PERFORMANCE & OUTPUT =====
+    private Boolean includeTotalCount;      // Whether to include total count
+    private List<String> includeFields;    // Only return specific fields (projection)
+    private List<String> excludeFields;    // Exclude specific fields
+    private Integer maxResults;             // Maximum number of results
+    
+    // ===== HELPER METHODS =====
+    
+    /**
+     * Check if any price filter is applied
+     */
+    public boolean hasPriceFilter() {
+        return minPrice != null || maxPrice != null || hasDiscount != null || minDiscountPercentage != null;
+    }
+    
+    /**
+     * Check if any date filter is applied
+     */
+    public boolean hasDateFilter() {
+        return releaseYear != null || releaseYearFrom != null || releaseYearTo != null 
+                || createdAfter != null || createdBefore != null;
+    }
+    
+    /**
+     * Check if any stock filter is applied
+     */
+    public boolean hasStockFilter() {
+        return availabilities != null || inStock != null || minStock != null;
+    }
+    
+    /**
+     * Check if search is for physical products only
+     */
+    public boolean isPhysicalProductsOnly() {
+        return productTypes != null && productTypes.size() == 1 
+                && productTypes.contains(ProductType.PHYSICAL);
+    }
+    
+    /**
+     * Check if search is for digital products only
+     */
+    public boolean isDigitalProductsOnly() {
+        return productTypes != null && productTypes.size() == 1 
+                && productTypes.contains(ProductType.DIGITAL);
+    }
 }
-

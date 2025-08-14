@@ -1,155 +1,85 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.Product;
+package com.nguyenvu.ecommercems.productservice.service.product;
 
 import com.nguyenvu.ecommercems.productservice.dto.*;
-import com.nguyenvu.ecommercems.productservice.service.Product.ProductserviceImpl;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Product Service Facade
- * Simple delegation to ProductserviceImpl until microservice architecture is completed
+ * Product Service Interface
  */
-@Service
-@RequiredArgsConstructor
-@Slf4j
-public class ProductService {
-    
-    private final ProductserviceImpl ProductserviceImpl;
+public interface ProductService {
 
     // ===== BASIC CRUD OPERATIONS =====
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        return ProductserviceImpl.getAllProducts(pageable);
-    }
-
-    public ProductDTO getBookById(String id) {
-        return ProductserviceImpl.getBookById(id);
-    }
-
-    public ProductDTO getBookByCode(String code) {
-        return ProductserviceImpl.getBookByCode(code);
-    }
-
-    public ProductDTO getBookByIsbn(String isbn) {
-        return ProductserviceImpl.getBookByIsbn(isbn);
-    }
-
-    public ProductDTO saveBook(ProductDTO ProductDTO) {
-        return ProductserviceImpl.saveBook(ProductDTO);
-    }
-
-    public ProductDTO updateBook(String id, ProductDTO ProductDTO) {
-        return ProductserviceImpl.updateBook(id, ProductDTO);
-    }
-
-    public void deleteBook(String id) {
-        ProductserviceImpl.deleteBook(id);
-    }
+    Page<ProductDTO> getAllProducts(Pageable pageable);
+    
+    ProductDTO getBookById(String id);
+    
+    ProductDTO getBookByCode(String code);
+    
+    ProductDTO getBookByIsbn(String isbn);
+    
+    ProductDTO saveBook(ProductDTO productDTO);
+    
+    ProductDTO updateBook(String id, ProductDTO productDTO);
+    
+    void deleteBook(String id);
 
     // ===== SEARCH OPERATIONS =====
-    public List<ProductDTO> searchProducts(String query) {
-        return ProductserviceImpl.searchProducts(query);
-    }
-
-    public Page<ProductDTO> searchProductsWithFilters(ProductSearchCriteria criteria, Pageable pageable) {
-        return ProductserviceImpl.searchProductsWithFilters(criteria, pageable);
-    }
+    List<ProductDTO> searchProducts(String query);
+    
+    Page<ProductDTO> searchProductsWithFilters(ProductSearchCriteria criteria, Pageable pageable);
 
     // ===== CATEGORY OPERATIONS =====
-    public List<ProductDTO> getProductsByCategory(String categoryId, int limit) {
-        return ProductserviceImpl.getProductsByCategory(categoryId, limit);
-    }
-
-    public List<ProductDTO> getProductsInMultipleCategories(List<String> categoryIds) {
-        return ProductserviceImpl.getProductsInMultipleCategories(categoryIds);
-    }
+    List<ProductDTO> getProductsByCategory(String categoryId, int limit);
+    
+    List<ProductDTO> getProductsInMultipleCategories(List<String> categoryIds);
 
     // ===== PRICING OPERATIONS =====
-    public List<ProductDTO> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, int limit) {
-        return ProductserviceImpl.getProductsByPriceRange(minPrice, maxPrice, limit);
-    }
-
-    public List<ProductDTO> getDiscountedProducts() {
-        return ProductserviceImpl.getDiscountedProducts();
-    }
+    List<ProductDTO> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, int limit);
+    
+    List<ProductDTO> getDiscountedProducts();
 
     // ===== STOCK OPERATIONS =====
-    public void updateStock(String id, Integer quantity) {
-        ProductserviceImpl.updateStock(id, quantity);
-    }
-
-    public List<ProductDTO> getLowStockProducts(Integer threshold) {
-        return ProductserviceImpl.getLowStockProducts(threshold);
-    }
+    void updateStock(String id, Integer quantity);
+    
+    List<ProductDTO> getLowStockProducts(Integer threshold);
 
     // ===== RECOMMENDATION OPERATIONS =====
-    public List<ProductDTO> getNewReleases(int limit) {
-        return ProductserviceImpl.getNewReleases(limit);
-    }
+    List<ProductDTO> getNewReleases(int limit);
+    
+    List<ProductDTO> getBestsellers(int limit);
+    
+    List<ProductDTO> getDailyBestsellers(int limit);
+    
+    List<ProductDTO> getWeeklyBestsellers(int limit);
+    
+    List<ProductDTO> getMonthlyBestsellers(int limit);
+    
+    List<ProductDTO> getRecommendedProducts();
+    
+    List<ProductDTO> getSimilarProducts(String id, int limit);
 
-    public List<ProductDTO> getBestsellers(int limit) {
-        return ProductserviceImpl.getBestsellers(limit);
-    }
+    // ===== SUPPLIER OPERATIONS =====
+    List<ProductDTO> getProductsByAuthor(String authorId, int limit);
+    
+    List<ProductDTO> getProductsByAuthorName(String authorName, int limit);
 
-    public List<ProductDTO> getDailyBestsellers(int limit) {
-        return ProductserviceImpl.getDailyBestsellers(limit);
-    }
-
-    public List<ProductDTO> getWeeklyBestsellers(int limit) {
-        return ProductserviceImpl.getWeeklyBestsellers(limit);
-    }
-
-    public List<ProductDTO> getMonthlyBestsellers(int limit) {
-        return ProductserviceImpl.getMonthlyBestsellers(limit);
-    }
-
-    public List<ProductDTO> getRecommendedProducts() {
-        return ProductserviceImpl.getRecommendedProducts();
-    }
-
-    public List<ProductDTO> getSimilarProducts(String id, int limit) {
-        return ProductserviceImpl.getSimilarProducts(id, limit);
-    }
-
-    // ===== Supplier OPERATIONS =====
-    public List<ProductDTO> getProductsByAuthor(String authorId, int limit) {
-        return ProductserviceImpl.getProductsByAuthor(authorId, limit);
-    }
-
-    public List<ProductDTO> getProductsByAuthorName(String authorName, int limit) {
-        return ProductserviceImpl.getProductsByAuthorName(authorName, limit);
-    }
-
-    // ===== Manufacturer OPERATIONS =====
-    public List<ProductDTO> getProductsByPublisher(String publisherId, int limit) {
-        return ProductserviceImpl.getProductsByPublisher(publisherId, limit);
-    }
-
-    public List<ProductDTO> getProductsByPublisherName(String publisherName, int limit) {
-        return ProductserviceImpl.getProductsByPublisherName(publisherName, limit);
-    }
+    // ===== MANUFACTURER OPERATIONS =====
+    List<ProductDTO> getProductsByPublisher(String publisherId, int limit);
+    
+    List<ProductDTO> getProductsByPublisherName(String publisherName, int limit);
 
     // ===== SERIES OPERATIONS =====
-    public List<ProductDTO> getProductsBySeries(String seriesId, int limit) {
-        return ProductserviceImpl.getProductsBySeries(seriesId, limit);
-    }
+    List<ProductDTO> getProductsBySeries(String seriesId, int limit);
 
     // ===== RATING OPERATIONS =====
-    public boolean canUserRate(String bookId, String userId) {
-        return ProductserviceImpl.canUserRate(bookId, userId);
-    }
-
-    public ApiResponse addRating(String bookId, ProductRatingRequest request) {
-        return ProductserviceImpl.addRating(bookId, request);
-    }
-
-    public RatingStatsDTO getRatingStats(String bookId) {
-        return ProductserviceImpl.getRatingStats(bookId);
-    }
+    boolean canUserRate(String bookId, String userId);
+    
+    ApiResponse addRating(String bookId, ProductRatingRequest request);
+    
+    RatingStatsDTO getRatingStats(String bookId);
 }
 

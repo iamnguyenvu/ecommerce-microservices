@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.impl;
+package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.impl;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.*;
 import com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.ProductDomainEventPublisher;
@@ -22,12 +22,12 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     }
     
     @Override
-    public void publishBookCreated(ProductCreatedEvent event) {
+    public void publishProductCreated(ProductCreatedEvent event) {
         eventPublisher.publishEvent(event);
     }
     
     @Override
-    public void publishBookUpdated(ProductUpdatedEvent event) {
+    public void publishProductUpdated(ProductUpdatedEvent event) {
         eventPublisher.publishEvent(event);
     }
     
@@ -42,32 +42,32 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     }
     
     @Override
-    public void publishBookCreatedEvent(String bookId, String code, String isbn, String title, LocalDateTime occurredAt) {
+    public void publishProductCreatedEvent(String productId, String code, String isbn, String title, LocalDateTime occurredAt) {
         ProductCreatedEvent event = ProductCreatedEvent.builder()
-                .bookId(bookId)
+                .bookId(productId)
                 .code(code)
                 .isbn(isbn)
                 .title(title)
                 .occurredAt(occurredAt.atOffset(java.time.ZoneOffset.UTC))
                 .build();
-        publishBookCreated(event);
+        publishProductCreated(event);
     }
 
     @Override
-    public void publishBookUpdatedEvent(String bookId, String updatedBy, LocalDateTime occurredAt) {
+    public void publishProductUpdatedEvent(String productId, String updatedBy, LocalDateTime occurredAt) {
         ProductUpdatedEvent event = ProductUpdatedEvent.builder()
-                .bookId(bookId)
+                .bookId(productId)
                 .updatedBy(updatedBy)
                 .occurredAt(occurredAt.atOffset(java.time.ZoneOffset.UTC))
                 .build();
-        publishBookUpdated(event);
+        publishProductUpdated(event);
     }
     
     @Override
-    public void publishStockChangedEvent(String bookId, Integer previousStock, Integer newStock, String reason, LocalDateTime occurredAt) {
+    public void publishStockChangedEvent(String productId, Integer previousStock, Integer newStock, String reason, LocalDateTime occurredAt) {
         Integer delta = newStock - previousStock;
         StockChangedEvent event = StockChangedEvent.builder()
-                .bookId(bookId)
+                .bookId(productId)
                 .oldStock(previousStock)
                 .newStock(newStock)
                 .delta(delta)
@@ -78,9 +78,9 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     }
     
     @Override
-    public void publishSalesRecordedEvent(String bookId, String orderId, Integer quantitySold, BigDecimal unitPrice, BigDecimal totalAmount, String customerId, LocalDateTime occurredAt) {
+    public void publishSalesRecordedEvent(String productId, String orderId, Integer quantitySold, BigDecimal unitPrice, BigDecimal totalAmount, String customerId, LocalDateTime occurredAt) {
         SalesRecordedEvent event = SalesRecordedEvent.builder()
-                .bookId(bookId)
+                .bookId(productId)
                 .orderId(orderId)
                 .quantitySold(quantitySold)
                 .unitPrice(unitPrice)

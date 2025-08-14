@@ -3,7 +3,9 @@ package com.nguyenvu.ecommercems.productservice.model.enums;
 public enum Availability {
     IN_STOCK("in-stock", "Còn hàng"),
     OUT_OF_STOCK("out-of-stock", "Hết hàng"),
+    LOW_STOCK("low-stock", "Sắp hết hàng"),
     PRE_ORDER("pre-order", "Đặt trước"),
+    BACK_ORDER("back-order", "Đặt hàng trước"),
     LIMITED("limited", "Số lượng có hạn");
     
     private final String code;

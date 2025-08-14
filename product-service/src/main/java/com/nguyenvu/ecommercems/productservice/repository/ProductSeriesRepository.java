@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.repository;
+package com.nguyenvu.ecommercems.productservice.repository;
 
 import com.nguyenvu.ecommercems.productservice.model.ProductSeries;
 import org.springframework.data.mongodb.repository.MongoRepository;

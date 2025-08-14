@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.Product;
+package com.nguyenvu.ecommercems.productservice.service.product;
 
 import com.nguyenvu.ecommercems.productservice.dto.*;
 import com.nguyenvu.ecommercems.productservice.exception.ProductNotFoundException;
@@ -10,6 +10,7 @@ import com.nguyenvu.ecommercems.productservice.model.embedded.Rating;
 import com.nguyenvu.ecommercems.productservice.model.enums.Availability;
 import com.nguyenvu.ecommercems.productservice.model.enums.ProductStatus;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
+import com.nguyenvu.ecommercems.productservice.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class ProductserviceImpl {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository ProductRepository;
     private final ProductMapper ProductMapper;
@@ -119,8 +120,8 @@ public class ProductserviceImpl {
         // Save to repository
         Product savedProduct = ProductRepository.save(Product);
 
-        log.info("Successfully saved Product with ID: {}", savedBook.getId());
-        return convertToDTO(savedBook);
+        log.info("Successfully saved Product with ID: {}", savedProduct.getId());
+        return convertToDTO(savedProduct);
     }
 
     /**
@@ -140,7 +141,7 @@ public class ProductserviceImpl {
         Product.setUpdatedAt(LocalDateTime.now());
 
         Product updatedProduct = ProductRepository.save(Product);
-        return convertToDTO(updatedBook);
+        return convertToDTO(updatedProduct);
     }
 
     /**
@@ -225,33 +226,33 @@ public class ProductserviceImpl {
         }
 
         // Supplier filter
-        if (StringUtils.hasText(criteria.getAuthorName())) {
-            query.addCriteria(Criteria.where("Suppliers.name").regex(criteria.getAuthorName(), "i"));
+        if (StringUtils.hasText(criteria.getSupplierName())) {
+            query.addCriteria(Criteria.where("Suppliers.name").regex(criteria.getSupplierName(), "i"));
         }
 
         // Multiple Suppliers filter
-        if (criteria.getAuthorNames() != null && !criteria.getAuthorNames().isEmpty()) {
-            query.addCriteria(Criteria.where("Suppliers.name").in(criteria.getAuthorNames()));
+        if (criteria.getSupplierIds() != null && !criteria.getSupplierIds().isEmpty()) {
+            query.addCriteria(Criteria.where("Suppliers.supplierId").in(criteria.getSupplierIds()));
         }
 
         // Manufacturer filter
-        if (StringUtils.hasText(criteria.getPublisherId())) {
-            query.addCriteria(Criteria.where("Manufacturer.publisherId").is(criteria.getPublisherId()));
+        if (StringUtils.hasText(criteria.getManufacturerId())) {
+            query.addCriteria(Criteria.where("Manufacturer.manufacturerId").is(criteria.getManufacturerId()));
         }
 
         // Manufacturer name filter
-        if (StringUtils.hasText(criteria.getPublisherName())) {
-            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getPublisherName(), "i"));
+        if (StringUtils.hasText(criteria.getManufacturerName())) {
+            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getManufacturerName(), "i"));
         }
 
         // Availability filter
-        if (criteria.getAvailability() != null) {
-            query.addCriteria(Criteria.where("availability").is(criteria.getAvailability()));
+        if (criteria.getAvailabilities() != null && !criteria.getAvailabilities().isEmpty()) {
+            query.addCriteria(Criteria.where("availability").in(criteria.getAvailabilities()));
         }
 
-        // Physical attributes filter
-        if (criteria.getFormat() != null) {
-            query.addCriteria(Criteria.where("physical.format").is(criteria.getFormat()));
+        // Product type filter (replaces format)
+        if (criteria.getProductTypes() != null && !criteria.getProductTypes().isEmpty()) {
+            query.addCriteria(Criteria.where("type").in(criteria.getProductTypes()));
         }
 
         // Rating filter
@@ -270,10 +271,11 @@ public class ProductserviceImpl {
             query.addCriteria(Criteria.where("stockQuantity").gt(0));
         }
 
-        // Language filter
-        if (StringUtils.hasText(criteria.getLanguage())) {
-            query.addCriteria(Criteria.where("physical.language").regex(criteria.getLanguage(), "i"));
-        }
+        // Language filter - commented out as not available in new search criteria
+        // TODO: Add language filter to ProductSearchCriteria if needed
+        // if (StringUtils.hasText(criteria.getLanguage())) {
+        //     query.addCriteria(Criteria.where("physical.language").regex(criteria.getLanguage(), "i"));
+        // }
 
         // Series filter
         if (StringUtils.hasText(criteria.getSeriesId())) {
@@ -281,17 +283,13 @@ public class ProductserviceImpl {
         }
 
         // Sales filters
-        if (criteria.getMinTotalSold() != null || criteria.getMaxTotalSold() != null) {
-            Criteria totalSoldCriteria = Criteria.where("sales.totalSold");
-            if (criteria.getMinTotalSold() != null) {
-                totalSoldCriteria = totalSoldCriteria.gte(criteria.getMinTotalSold());
-            }
-            if (criteria.getMaxTotalSold() != null) {
-                totalSoldCriteria = totalSoldCriteria.lte(criteria.getMaxTotalSold());
-            }
-            query.addCriteria(totalSoldCriteria);
+        if (criteria.getMinTotalSold() != null) {
+            query.addCriteria(Criteria.where("sales.totalSold").gte(criteria.getMinTotalSold()));
         }
 
+        // Detailed sales tracking filters - commented out as not available in new search criteria
+        // TODO: Add detailed sales tracking to ProductSearchCriteria if needed
+        /*
         if (criteria.getMinDailySold() != null || criteria.getMaxDailySold() != null) {
             Criteria dailySoldCriteria = Criteria.where("sales.dailySold");
             if (criteria.getMinDailySold() != null) {
@@ -324,6 +322,7 @@ public class ProductserviceImpl {
             }
             query.addCriteria(monthlySoldCriteria);
         }
+        */
 
         if (StringUtils.hasText(criteria.getSortBy())) {
             Sort.Direction direction = "desc".equalsIgnoreCase(criteria.getSortDirection()) ?
@@ -812,14 +811,14 @@ public class ProductserviceImpl {
         Product currentProduct = ProductRepository.findById(bookId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + bookId));
 
-        List<String> categoryIds = currentBook.getCategories().stream()
+        List<String> categoryIds = currentProduct.getCategories().stream()
                 .map(ProductCategory::getCategoryId)
                 .toList();
-        List<String> authorNames = currentBook.getAuthors().stream()
-                .map(Supplier::getName)
+        List<String> supplierNames = currentProduct.getSuppliers().stream()
+                .map(supplier -> supplier.getName())
                 .toList();
 
-        List<Product> similarProducts = ProductRepository.findSimilarProducts(categoryIds, authorNames, bookId);
+        List<Product> similarProducts = ProductRepository.findSimilarProducts(categoryIds, supplierNames, bookId);
 
         return similarProducts.stream()
                 .limit(limit)
@@ -972,13 +971,13 @@ public class ProductserviceImpl {
             throw new IllegalArgumentException("Product code is required");
         }
 
-        if (StringUtils.hasText(ProductDTO.getIsbn())) {
-            String isbn = ProductDTO.getIsbn().replaceAll("[-\\s]", "");
-            if (isbn.length() != 10 && isbn.length() != 13) {
-                throw new IllegalArgumentException("ISBN must be 10 or 13 digits");
+        if (StringUtils.hasText(ProductDTO.getSku())) {
+            String sku = ProductDTO.getSku().trim();
+            if (sku.length() > 50) {
+                throw new IllegalArgumentException("SKU cannot exceed 50 characters");
             }
-            if (!isbn.matches("\\d+")) {
-                throw new IllegalArgumentException("ISBN must contain only digits");
+            if (!sku.matches("^[A-Z0-9\\-_]+$")) {
+                throw new IllegalArgumentException("SKU must contain only uppercase letters, numbers, hyphens and underscores");
             }
         }
 
@@ -997,9 +996,9 @@ public class ProductserviceImpl {
             }
         }
 
-        if (ProductDTO.getAuthors() != null && !ProductDTO.getAuthors().isEmpty()) {
-            for (Supplier Supplier : ProductDTO.getAuthors()) {
-                if (!StringUtils.hasText(Supplier.getName())) {
+        if (ProductDTO.getSuppliers() != null && !ProductDTO.getSuppliers().isEmpty()) {
+            for (Supplier supplier : ProductDTO.getSuppliers()) {
+                if (!StringUtils.hasText(supplier.getName())) {
                     throw new IllegalArgumentException("Supplier name is required");
                 }
             }
@@ -1016,11 +1015,11 @@ public class ProductserviceImpl {
             }
         }
 
-        if (ProductDTO.getPublisher() != null) {
-            if (!StringUtils.hasText(ProductDTO.getPublisher().getPublisherId())) {
+        if (ProductDTO.getManufacturer() != null) {
+            if (!StringUtils.hasText(ProductDTO.getManufacturer().getManufacturerId())) {
                 throw new IllegalArgumentException("Manufacturer ID is required");
             }
-            if (!StringUtils.hasText(ProductDTO.getPublisher().getName())) {
+            if (!StringUtils.hasText(ProductDTO.getManufacturer().getName())) {
                 throw new IllegalArgumentException("Manufacturer name is required");
             }
         }
@@ -1056,7 +1055,7 @@ public class ProductserviceImpl {
         return Product.getStatus() == ProductStatus.ACTIVE;
     }
 
-    // ===== TODO: Báº N Tá»° THÃŠM CÃC METHODS KHÃC á»ž ÄÃ‚Y =====
+    // ===== TODO: BẠN TỰ THÊM CÁC METHODS KHÁC Ở ĐÂY =====
     
 }
 

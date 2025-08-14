@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.model;
+package com.nguyenvu.ecommercems.productservice.model;
 
 import com.nguyenvu.ecommercems.productservice.model.embedded.*;
 import com.nguyenvu.ecommercems.productservice.model.enums.*;
@@ -25,9 +25,9 @@ public class Product {
     @Id
     private String id;
     
-    // ===== THÃ”NG TIN CÆ  Báº¢N =====
+    // ===== THÔNG TIN CƠ BẢN =====
     @Indexed(unique = true)
-    private String code;                    // MÃ£ sáº£n pháº©m ná»™i bá»™ (PROD2024001)
+    private String code;                    // Mã sản phẩm nội bộ (PROD2024001)
     
     @Indexed
     private String sku;                     // Stock Keeping Unit
@@ -38,34 +38,34 @@ public class Product {
     private String subtitle;
     private String description;
     
-    // ===== THÃ”NG TIN Sáº¢N XUáº¤T =====
-    private Manufacturer manufacturer;         // Äá»•i tá»« Manufacturer thÃ nh manufacturer
-    private Integer manufacturedYear;       // Äá»•i tá»« publishedYear
-    private LocalDate releaseDate;          // NgÃ y ra máº¯t sáº£n pháº©m
-    private LocalDateTime launchTime;       // Thá»i Ä‘iá»ƒm má»Ÿ bÃ¡n chÃ­nh xÃ¡c  
-    private String version;                 // Äá»•i tá»« edition thÃ nh version
+    // ===== THÔNG TIN SẢN XUẤT =====
+    private Manufacturer manufacturer;         // Đổi từ Manufacturer thành manufacturer
+    private Integer manufacturedYear;       // Đổi từ publishedYear
+    private LocalDate releaseDate;          // Ngày ra mắt sản phẩm
+    private LocalDateTime launchTime;       // Thời điểm mở bán chính xác  
+    private String version;                 // Đổi từ edition thành version
     
-    // ===== THÃ”NG TIN Váº¬T LÃ =====
+    // ===== THÔNG TIN VẬT LÝ =====
     private Physical physical;              // Format, language, dimensions, weight
     
-    // ===== NHÃ€ Sáº¢N XUáº¤T =====
-    private List<Supplier> suppliers;         // Äá»•i tá»« Suppliers thÃ nh suppliers
+    // ===== NHÀ SẢN XUẤT =====
+    private List<Supplier> suppliers;         // Đổi từ Suppliers thành suppliers
     
-    // ===== PHÃ‚N LOáº I =====
+    // ===== PHÂN LOẠI =====
     private List<ProductCategory> categories;
     private List<String> subjects;
     private AgeGroup ageGroup;              // enum: CHILDREN, TEEN, ADULT, ALL_AGES
     
-    // ===== GIÃ Cáº¢ =====
+    // ===== GIÁ CẢ =====
     private Pricing pricing;
     
-    // ===== HÃŒNH áº¢NH =====
+    // ===== HÌNH ẢNH =====
     private Images images;
     
-    // ===== ÄÃNH GIÃ CHI TIáº¾T =====
+    // ===== ĐÁNH GIÁ CHI TIẾT =====
     private Rating rating;
     
-    // ===== TRáº NG THÃI & KHO =====
+    // ===== TRẠNG THÁI & KHO =====
     private ProductStatus status;              // enum: ACTIVE, INACTIVE, DISCONTINUED, PRE_ORDER
     private Availability availability;      // enum: IN_STOCK, OUT_OF_STOCK, PRE_ORDER, LIMITED
     private Integer stockQuantity;

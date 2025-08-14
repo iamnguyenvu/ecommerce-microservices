@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.shared.cache.impl;
+package com.nguyenvu.ecommercems.productservice.service.shared.cache.impl;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.cache.ProductCacheService;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
@@ -18,7 +18,7 @@ import java.util.List;
 @Primary
 @Slf4j
 @RequiredArgsConstructor
-public class SpringCacheBookCacheService implements ProductCacheService {
+public class SpringCacheProductCacheService implements ProductCacheService {
     
     private final CacheManager cacheManager;
 
@@ -54,12 +54,12 @@ public class SpringCacheBookCacheService implements ProductCacheService {
     }
 
     @Override
-    public void evictByAuthor(String authorId) {
-        log.debug("Evicting cache for Supplier: {}", authorId);
+    public void evictBySupplier(String supplierId) {
+        log.debug("Evicting cache for Supplier: {}", supplierId);
         
-        evictFromCache(ProductServiceConstants.CACHE_Products_BY_AUTHOR, authorId);
+        evictFromCache(ProductServiceConstants.CACHE_Products_BY_AUTHOR, supplierId);
         
-        log.debug("Cache evicted for Supplier: {}", authorId);
+        log.debug("Cache evicted for Supplier: {}", supplierId);
     }
 
     @Override
@@ -81,12 +81,12 @@ public class SpringCacheBookCacheService implements ProductCacheService {
     }
     
     @Override
-    public void evictByIsbn(String isbn) {
-        log.debug("Evicting cache for ISBN: {}", isbn);
+    public void evictBySku(String sku) {
+        log.debug("Evicting cache for SKU: {}", sku);
         
-        evictFromCache(ProductServiceConstants.CACHE_BOOK_BY_ISBN, isbn);
+        evictFromCache(ProductServiceConstants.CACHE_BOOK_BY_ISBN, sku);
         
-        log.debug("Cache evicted for ISBN: {}", isbn);
+        log.debug("Cache evicted for SKU: {}", sku);
     }
     
     @Override

@@ -20,6 +20,11 @@ public final class ProductServiceConstants {
     public static final String CACHE_PRODUCT_BY_SUPPLIER = "Product:bySupplier";
     public static final String CACHE_PRODUCT_BY_PUBLISHER = "Product:byPublisher";
     
+    // ===== Legacy BookStore Cache Names (for compatibility) =====
+    public static final String CACHE_BOOK_BY_ID = "Product:byId";
+    public static final String CACHE_BOOK_BY_CODE = "Product:byCode";
+    public static final String CACHE_BOOK_BY_ISBN = "Product:byIsbn";
+    
     // ===== Additional Cache Names (for SpringCacheBookCacheService) =====
     public static final String CACHE_ALL_PRODUCTS = "Product:all";
     public static final String CACHE_FEATURED_PRODUCTS = "Product:featured";
@@ -32,6 +37,13 @@ public final class ProductServiceConstants {
     public static final String CACHE_OUT_OF_STOCK_PRODUCTS = "Product:outOfStock";
     public static final String CACHE_PRODUCTS_BY_PUBLISHER = "Product:byPublisher";
     public static final String CACHE_SEARCH_RESULTS = "Product:searchResults";
+    
+    // ===== Legacy BookStore Cache Names (for compatibility) =====
+    public static final String CACHE_ALL_Products = "Product:all";
+    public static final String CACHE_FEATURED_Products = "Product:featured";
+    public static final String CACHE_Products_BY_CATEGORY = "Product:byCategory";  
+    public static final String CACHE_Products_BY_AUTHOR = "Product:bySupplier";
+    public static final String CACHE_Products_BY_PUBLISHER = "Product:byPublisher";
     
     // ===== Event Topics (for messaging) =====
     public static final String TOPIC_PRODUCT_CREATED = "Product.created";

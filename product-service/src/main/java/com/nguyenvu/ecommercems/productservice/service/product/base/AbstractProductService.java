@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service.product.base;
+package com.nguyenvu.ecommercems.productservice.service.product.base;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.mapper.ProductMapper;
@@ -42,21 +42,21 @@ public abstract class AbstractProductService {
             throw new IllegalArgumentException("Product code is required");
         }
 
-        validateISBN(ProductDTO.getIsbn());
+        validateSKU(ProductDTO.getSku());
         validatePricing(ProductDTO.getPricing());
         validateSupplier(ProductDTO.getSuppliers());
         validateStockQuantity(ProductDTO.getStockQuantity());
         validateCategories(ProductDTO.getCategories());
-        validatePublisher(ProductDTO.getPublisher());
+        validateManufacturer(ProductDTO.getManufacturer());
     }
 
-    protected void validateISBN(String isbn) {
-        if (StringUtils.hasText(isbn)) {
-            if (isbn.length() != 10 && isbn.length() != 13) {
-                throw new IllegalArgumentException("ISBN must be 10 or 13 digits");
+    protected void validateSKU(String sku) {
+        if (StringUtils.hasText(sku)) {
+            if (sku.trim().isEmpty()) {
+                throw new IllegalArgumentException("SKU cannot be empty");
             }
-            if (!isbn.matches("\\d+")) {
-                throw new IllegalArgumentException("ISBN must contain only digits");
+            if (sku.length() > 50) {
+                throw new IllegalArgumentException("SKU cannot exceed 50 characters");
             }
         }
     }
@@ -103,9 +103,9 @@ public abstract class AbstractProductService {
         }
     }
 
-    protected void validatePublisher(Manufacturer Manufacturer) {
+    protected void validateManufacturer(Manufacturer Manufacturer) {
         if (Manufacturer != null) {
-            if (!StringUtils.hasText(Manufacturer.getPublisherId())) {
+            if (!StringUtils.hasText(Manufacturer.getManufacturerId())) {
                 throw new IllegalArgumentException("Manufacturer ID is required");
             }
             if (!StringUtils.hasText(Manufacturer.getName())) {

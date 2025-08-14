@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.repository;
+package com.nguyenvu.ecommercems.productservice.repository;
 
 /**
  * Centralized Query Constants for MongoDB queries across all microservices.
