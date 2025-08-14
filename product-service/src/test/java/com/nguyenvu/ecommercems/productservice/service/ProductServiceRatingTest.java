@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service;
+﻿package com.nguyenvu.ecommercems.productservice.service;
 
 import com.nguyenvu.ecommercems.productservice.dto.ApiResponse;
 import com.nguyenvu.ecommercems.productservice.dto.ProductRatingRequest;
@@ -41,13 +41,13 @@ class ProductServiceRatingTest {
     @InjectMocks
     private ProductserviceImpl ProductService;
 
-    private Product testBook;
+    private Product testProduct;
     private ProductRatingRequest validRequest;
 
     @BeforeEach
     void setUp() {
         testProduct = Product.builder()
-                .id("BOOK001")
+                .id("PROD001")
                 .title("Test Product")
                 .status(ProductStatus.ACTIVE)
                 .rating(null) // No rating initially
@@ -66,8 +66,8 @@ class ProductServiceRatingTest {
     class InputValidationTests {
 
         @Test
-        @DisplayName("Should reject null bookId")
-        void shouldRejectNullBookId() {
+        @DisplayName("Should reject null productId")
+        void shouldRejectNullproductId() {
             // When
             ApiResponse response = ProductService.addRating(null, validRequest);
 
@@ -79,8 +79,8 @@ class ProductServiceRatingTest {
         }
 
         @Test
-        @DisplayName("Should reject empty bookId")
-        void shouldRejectEmptyBookId() {
+        @DisplayName("Should reject empty productId")
+        void shouldRejectEmptyproductId() {
             // When
             ApiResponse response = ProductService.addRating("", validRequest);
 
@@ -91,8 +91,8 @@ class ProductServiceRatingTest {
         }
 
         @Test
-        @DisplayName("Should reject blank bookId")
-        void shouldRejectBlankBookId() {
+        @DisplayName("Should reject blank productId")
+        void shouldRejectBlankproductId() {
             // When
             ApiResponse response = ProductService.addRating("   ", validRequest);
 
@@ -108,7 +108,7 @@ class ProductServiceRatingTest {
             validRequest.setRating(null);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -123,7 +123,7 @@ class ProductServiceRatingTest {
             validRequest.setRating(0.5);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -137,7 +137,7 @@ class ProductServiceRatingTest {
             validRequest.setRating(5.1);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -148,17 +148,17 @@ class ProductServiceRatingTest {
         @DisplayName("Should accept boundary values 1.0 and 5.0")
         void shouldAcceptBoundaryValues() {
             // Given
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // Test 1.0
             validRequest.setRating(1.0);
-            ApiResponse response1 = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response1 = ProductService.addRating("PROD001", validRequest);
             assertThat(response1.isSuccess()).isTrue();
 
             // Test 5.0
             validRequest.setRating(5.0);
-            ApiResponse response2 = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response2 = ProductService.addRating("PROD001", validRequest);
             assertThat(response2.isSuccess()).isTrue();
         }
     }
@@ -169,7 +169,7 @@ class ProductServiceRatingTest {
 
         @Test
         @DisplayName("Should handle Product not found")
-        void shouldHandleBookNotFound() {
+        void shouldHandleProductNotFound() {
             // Given
             when(ProductRepository.findById("NONEXISTENT")).thenReturn(Optional.empty());
 
@@ -183,13 +183,13 @@ class ProductServiceRatingTest {
 
         @Test
         @DisplayName("Should reject rating for inactive Product")
-        void shouldRejectRatingForInactiveBook() {
+        void shouldRejectRatingForInactiveProduct() {
             // Given
-            testBook.setStatus(ProductStatus.INACTIVE);
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
+            testProduct.setStatus(ProductStatus.INACTIVE);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -201,11 +201,11 @@ class ProductServiceRatingTest {
         @DisplayName("Should reject rating for discontinued Product")
         void shouldRejectRatingForDiscontinuedBook() {
             // Given
-            testBook.setStatus(ProductStatus.DISCONTINUED);
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
+            testProduct.setStatus(ProductStatus.DISCONTINUED);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -216,11 +216,11 @@ class ProductServiceRatingTest {
         @DisplayName("Should accept rating for active Product")
         void shouldAcceptRatingForActiveBook() {
             // Given
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isTrue();
@@ -236,12 +236,12 @@ class ProductServiceRatingTest {
         @DisplayName("Should create new Rating when Product has no rating")
         void shouldCreateNewRatingWhenBookHasNoRating() {
             // Given
-            testBook.setRating(null);
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            testProduct.setRating(null);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isTrue();
@@ -270,13 +270,13 @@ class ProductServiceRatingTest {
                     .build();
             existingRating.getDistribution().put("4", 1);
             
-            testBook.setRating(existingRating);
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            testProduct.setRating(existingRating);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When - Add second rating
             validRequest.setRating(5.0);
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isTrue();
@@ -296,11 +296,11 @@ class ProductServiceRatingTest {
         void shouldUpdateUpdatedAtTimestamp() {
             // Given
             LocalDateTime beforeCall = LocalDateTime.now();
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When
-            ProductService.addRating("BOOK001", validRequest);
+            ProductService.addRating("PROD001", validRequest);
 
             // Then
             ArgumentCaptor<Product> bookCaptor = ArgumentCaptor.forClass(Product.class);
@@ -320,11 +320,11 @@ class ProductServiceRatingTest {
         @DisplayName("Should return correct response data")
         void shouldReturnCorrectResponseData() {
             // Given
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isTrue();
@@ -351,14 +351,14 @@ class ProductServiceRatingTest {
                     .count(2)
                     .distribution(new HashMap<>())
                     .build();
-            testBook.setRating(existingRating);
+            testProduct.setRating(existingRating);
             
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When - Add third rating
             validRequest.setRating(5.0);
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             @SuppressWarnings("unchecked")
@@ -366,7 +366,7 @@ class ProductServiceRatingTest {
 
             assertThat(data.get("totalRatings")).isEqualTo(3);
             assertThat(data.get("userRating")).isEqualTo(5.0);
-            // newAverage should be calculated: (3.0*2 + 5.0)/3 = 11/3 ≈ 3.7
+            // newAverage should be calculated: (3.0*2 + 5.0)/3 = 11/3 â‰ˆ 3.7
             assertThat(data.get("newAverage")).isEqualTo(3.7);
         }
     }
@@ -379,11 +379,11 @@ class ProductServiceRatingTest {
         @DisplayName("Should handle database save failure gracefully")
         void shouldHandleDatabaseSaveFailureGracefully() {
             // Given
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
             when(ProductRepository.save(any(Product.class))).thenThrow(new RuntimeException("Database error"));
 
             // When
-            ApiResponse response = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response = ProductService.addRating("PROD001", validRequest);
 
             // Then
             assertThat(response.isSuccess()).isFalse();
@@ -399,13 +399,13 @@ class ProductServiceRatingTest {
                     .count(null)
                     .distribution(null)
                     .build();
-            testBook.setRating(corruptedRating);
+            testProduct.setRating(corruptedRating);
             
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
 
             // When & Then - Should handle gracefully or fix the corruption
             assertDoesNotThrow(() -> {
-                ProductService.addRating("BOOK001", validRequest);
+                ProductService.addRating("PROD001", validRequest);
             });
         }
     }
@@ -418,21 +418,21 @@ class ProductServiceRatingTest {
         @DisplayName("Should handle complete rating workflow end-to-end")
         void shouldHandleCompleteRatingWorkflowEndToEnd() {
             // Given
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(testBook));
-            when(ProductRepository.save(any(Product.class))).thenReturn(testBook);
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(testProduct));
+            when(ProductRepository.save(any(Product.class))).thenReturn(testProduct);
 
             // When - Add multiple ratings sequentially
             // First rating
             validRequest.setRating(5.0);
-            ApiResponse response1 = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response1 = ProductService.addRating("PROD001", validRequest);
 
             // Second rating  
             validRequest.setRating(3.0);
-            ApiResponse response2 = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response2 = ProductService.addRating("PROD001", validRequest);
 
             // Third rating
             validRequest.setRating(4.0);
-            ApiResponse response3 = ProductService.addRating("BOOK001", validRequest);
+            ApiResponse response3 = ProductService.addRating("PROD001", validRequest);
 
             // Then - All should succeed
             assertThat(response1.isSuccess()).isTrue();
@@ -454,23 +454,23 @@ class ProductServiceRatingTest {
         void shouldMaintainDataConsistencyAcrossOperations_SKIPPED() {
             // Given - Create fresh Product instance for this test to avoid cross-test contamination
             Product freshProduct = Product.builder()
-                    .id("BOOK001")
+                    .id("PROD001")
                     .title("Test Product")
                     .status(ProductStatus.ACTIVE)
                     .rating(null) // No rating initially
                     .build();
             
-            when(ProductRepository.findById("BOOK001")).thenReturn(Optional.of(freshBook));
+            when(ProductRepository.findById("PROD001")).thenReturn(Optional.of(freshBook));
 
             
             // Capture all save operations to verify consistency
             ArgumentCaptor<Product> bookCaptor = ArgumentCaptor.forClass(Product.class);
             when(ProductRepository.save(bookCaptor.capture())).thenReturn(freshBook);            // When - Add multiple ratings
             validRequest.setRating(4.0);
-            ProductService.addRating("BOOK001", validRequest);
+            ProductService.addRating("PROD001", validRequest);
             
             validRequest.setRating(5.0);
-            ProductService.addRating("BOOK001", validRequest);
+            ProductService.addRating("PROD001", validRequest);
 
             // Then - Verify data consistency in each save
             var savedProducts = bookCaptor.getAllValues();
@@ -487,3 +487,4 @@ class ProductServiceRatingTest {
         }
     }
 }
+

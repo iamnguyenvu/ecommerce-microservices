@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.repository;
+﻿package com.nguyenvu.ecommercems.productservice.repository;
 
 /**
  * Centralized Query Constants for MongoDB queries across all microservices.
@@ -145,7 +145,7 @@ public interface QueryConstants {
     String GROUP_BY_MONTH = "'_id': {'$dateToString': {'format': '%Y-%m', 'date': '$createdAt'}}, 'count': {'$sum': 1}";
     String GROUP_BY_CATEGORY = "'_id': '$categories.categoryId', 'count': {'$sum': 1}";
     String GROUP_BY_AUTHOR = "'_id': '$Suppliers.name', 'count': {'$sum': 1}";
-    String GROUP_BY_PUBLISHER = "'_id': '$publisher.name', 'count': {'$sum': 1}";
+    String GROUP_BY_PUBLISHER = "'_id': '$Manufacturer.name', 'count': {'$sum': 1}";
     String GROUP_BY_AVAILABILITY = "'_id': '$availability', 'count': {'$sum': 1}";
     
     // ===== MATCH STAGES FOR AGGREGATION =====
@@ -194,3 +194,4 @@ public interface QueryConstants {
     String EXISTS_TRUE = "'$exists': true";
     String EXISTS_FALSE = "'$exists': false";
 }
+

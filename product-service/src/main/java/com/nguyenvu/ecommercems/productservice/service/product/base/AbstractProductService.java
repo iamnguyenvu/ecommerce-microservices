@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.base;
+﻿package com.nguyenvu.ecommercems.productservice.service.product.base;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.mapper.ProductMapper;
@@ -6,7 +6,7 @@ import com.nguyenvu.ecommercems.productservice.model.Product;
 import com.nguyenvu.ecommercems.productservice.model.embedded.Supplier;
 import com.nguyenvu.ecommercems.productservice.model.embedded.ProductCategory;
 import com.nguyenvu.ecommercems.productservice.model.embedded.Pricing;
-import com.nguyenvu.ecommercems.productservice.model.embedded.Publisher;
+import com.nguyenvu.ecommercems.productservice.model.embedded.Manufacturer;
 import com.nguyenvu.ecommercems.productservice.model.enums.ProductStatus;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractProductservice {
+public abstract class AbstractProductService {
     @Autowired
     protected ProductRepository ProductRepository;
 
@@ -37,14 +37,14 @@ public abstract class AbstractProductservice {
     protected RedisTemplate<String, Object> redisTemplate;
 
     // ===== VALIDATION METHODS =====
-    protected void validateBookData(ProductDTO ProductDTO) {
+    protected void validateProductData(ProductDTO ProductDTO) {
         if (!StringUtils.hasText(ProductDTO.getCode())) {
             throw new IllegalArgumentException("Product code is required");
         }
 
         validateISBN(ProductDTO.getIsbn());
         validatePricing(ProductDTO.getPricing());
-        validateAuthor(ProductDTO.getAuthors());
+        validateSupplier(ProductDTO.getSuppliers());
         validateStockQuantity(ProductDTO.getStockQuantity());
         validateCategories(ProductDTO.getCategories());
         validatePublisher(ProductDTO.getPublisher());
@@ -74,7 +74,7 @@ public abstract class AbstractProductservice {
         }
     }
 
-    protected void validateAuthor(List<Supplier> Suppliers) {
+    protected void validateSupplier(List<Supplier> Suppliers) {
         if (Suppliers != null && !Suppliers.isEmpty()) {
             for (Supplier Supplier : Suppliers) {
                 if (!StringUtils.hasText(Supplier.getName())) {
@@ -103,13 +103,13 @@ public abstract class AbstractProductservice {
         }
     }
 
-    protected void validatePublisher(Publisher publisher) {
-        if (publisher != null) {
-            if (!StringUtils.hasText(publisher.getPublisherId())) {
-                throw new IllegalArgumentException("Publisher ID is required");
+    protected void validatePublisher(Manufacturer Manufacturer) {
+        if (Manufacturer != null) {
+            if (!StringUtils.hasText(Manufacturer.getPublisherId())) {
+                throw new IllegalArgumentException("Manufacturer ID is required");
             }
-            if (!StringUtils.hasText(publisher.getName())) {
-                throw new IllegalArgumentException("Publisher name is required");
+            if (!StringUtils.hasText(Manufacturer.getName())) {
+                throw new IllegalArgumentException("Manufacturer name is required");
             }
         }
     }
@@ -127,7 +127,7 @@ public abstract class AbstractProductservice {
         log.info("Operation: {}, Product ID: {}, Title: {}", operation, ProductDTO.getId(), ProductDTO.getTitle());
     }
 
-    protected void checkBookExists(String bookId) {
+    protected void checkProductExists(String bookId) {
         if (!ProductRepository.existsById(bookId)) {
             throw new IllegalArgumentException("Product with ID " + bookId + " does not exist");
         }
@@ -165,7 +165,7 @@ public abstract class AbstractProductservice {
     /**
      * Template method for saving a new Product
      */
-    protected final ProductDTO saveBookTemplate(ProductDTO ProductDTO) {
+    protected final ProductDTO saveProductTemplate(ProductDTO ProductDTO) {
         log.debug("Executing save Product template for: {}", ProductDTO.getTitle());
         
         // Convert to entity
@@ -178,10 +178,10 @@ public abstract class AbstractProductservice {
         Product savedProduct = ProductRepository.save(Product);
         
         // Execute hook
-        afterSave(savedBook);
+        afterSave(savedProduct);
         
         // Convert back to DTO
-        ProductDTO result = convertToDTO(savedBook);
+        ProductDTO result = convertToDTO(savedProduct);
         
         log.debug("Save Product template completed for: {}", result.getTitle());
         return result;
@@ -190,26 +190,26 @@ public abstract class AbstractProductservice {
     /**
      * Template method for updating an existing Product
      */
-    protected final Product updateBookTemplate(Product existingBook, Product updatedBook) {
-        log.debug("Executing update Product template for: {}", updatedBook.getTitle());
+    protected final Product updateProductTemplate(Product existingProduct, Product updatedProduct) {
+        log.debug("Executing update Product template for: {}", updatedProduct.getTitle());
         
         // Execute hook
-        beforeUpdate(existingBook, updatedBook);
+        beforeUpdate(existingProduct, updatedProduct);
         
         // Save to database
-        Product savedProduct = ProductRepository.save(updatedBook);
+        Product savedProduct = ProductRepository.save(updatedProduct);
         
         // Execute hook
-        afterUpdate(existingBook, savedBook);
+        afterUpdate(existingProduct, savedProduct);
         
-        log.debug("Update Product template completed for: {}", savedBook.getTitle());
-        return savedBook;
+        log.debug("Update Product template completed for: {}", savedProduct.getTitle());
+        return savedProduct;
     }
 
     /**
      * Template method for deleting a Product
      */
-    protected final void deleteBookTemplate(Product Product) {
+    protected final void deleteProductTemplate(Product Product) {
         log.debug("Executing delete Product template for: {}", Product.getTitle());
         
         // Execute hook
@@ -245,17 +245,17 @@ public abstract class AbstractProductservice {
     /**
      * Hook method called before updating a Product
      */
-    protected void beforeUpdate(Product existingBook, Product updatedBook) {
+    protected void beforeUpdate(Product existingProduct, Product updatedProduct) {
         // Default implementation - can be overridden
-        log.debug("Default beforeUpdate hook for: {}", updatedBook.getTitle());
+        log.debug("Default beforeUpdate hook for: {}", updatedProduct.getTitle());
     }
     
     /**
      * Hook method called after updating a Product
      */
-    protected void afterUpdate(Product existingBook, Product updatedBook) {
+    protected void afterUpdate(Product existingProduct, Product updatedProduct) {
         // Default implementation - can be overridden
-        log.debug("Default afterUpdate hook for: {}", updatedBook.getTitle());
+        log.debug("Default afterUpdate hook for: {}", updatedProduct.getTitle());
     }
     
     /**
@@ -274,3 +274,4 @@ public abstract class AbstractProductservice {
         log.debug("Default afterDelete hook for: {}", Product.getTitle());
     }
 }
+

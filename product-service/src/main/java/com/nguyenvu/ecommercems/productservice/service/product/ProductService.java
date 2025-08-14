@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product;
+﻿package com.nguyenvu.ecommercems.productservice.service.Product;
 
 import com.nguyenvu.ecommercems.productservice.dto.*;
 import com.nguyenvu.ecommercems.productservice.service.Product.ProductserviceImpl;
@@ -125,7 +125,7 @@ public class ProductService {
         return ProductserviceImpl.getProductsByAuthorName(authorName, limit);
     }
 
-    // ===== PUBLISHER OPERATIONS =====
+    // ===== Manufacturer OPERATIONS =====
     public List<ProductDTO> getProductsByPublisher(String publisherId, int limit) {
         return ProductserviceImpl.getProductsByPublisher(publisherId, limit);
     }
@@ -152,3 +152,4 @@ public class ProductService {
         return ProductserviceImpl.getRatingStats(bookId);
     }
 }
+

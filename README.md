@@ -330,4 +330,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-**Built with ❤️ for learning microservices architecture**
+**© 2025 Nguyen Vu** - Built with ❤️ for learning microservices architecture

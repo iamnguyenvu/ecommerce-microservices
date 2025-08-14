@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product;
+﻿package com.nguyenvu.ecommercems.productservice.service.Product;
 
 import com.nguyenvu.ecommercems.productservice.dto.*;
 import com.nguyenvu.ecommercems.productservice.exception.ProductNotFoundException;
@@ -234,14 +234,14 @@ public class ProductserviceImpl {
             query.addCriteria(Criteria.where("Suppliers.name").in(criteria.getAuthorNames()));
         }
 
-        // Publisher filter
+        // Manufacturer filter
         if (StringUtils.hasText(criteria.getPublisherId())) {
-            query.addCriteria(Criteria.where("publisher.publisherId").is(criteria.getPublisherId()));
+            query.addCriteria(Criteria.where("Manufacturer.publisherId").is(criteria.getPublisherId()));
         }
 
-        // Publisher name filter
+        // Manufacturer name filter
         if (StringUtils.hasText(criteria.getPublisherName())) {
-            query.addCriteria(Criteria.where("publisher.name").regex(criteria.getPublisherName(), "i"));
+            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getPublisherName(), "i"));
         }
 
         // Availability filter
@@ -422,20 +422,20 @@ public class ProductserviceImpl {
                 .toList();
     }
 
-    // ===== Product OPERATIONS BY PUBLISHER =====
+    // ===== Product OPERATIONS BY Manufacturer =====
     /**
-     * Get products by publisher
+     * Get products by Manufacturer
      */
     public List<ProductDTO> getProductsByPublisher(String publisherId) {
         return getProductsByPublisher(publisherId, 50); // Default limit of 50
     }
 
     public List<ProductDTO> getProductsByPublisher(String publisherId, int limit) {
-        log.debug("Getting {} products by publisher: {}", limit, publisherId);
+        log.debug("Getting {} products by Manufacturer: {}", limit, publisherId);
 
         // Validate publisherId
         if (!StringUtils.hasText(publisherId)) {
-            throw new IllegalArgumentException("Publisher ID is required");
+            throw new IllegalArgumentException("Manufacturer ID is required");
         }
 
         if (limit <= 0 || limit > 100) {
@@ -457,11 +457,11 @@ public class ProductserviceImpl {
     }
 
     public List<ProductDTO> getProductsByPublisherName(String publisherName, int limit) {
-        log.debug("Getting {} products by publisher name: {}", limit, publisherName);
+        log.debug("Getting {} products by Manufacturer name: {}", limit, publisherName);
 
         // Validate publisherName
         if (!StringUtils.hasText(publisherName)) {
-            throw new IllegalArgumentException("Publisher name is required");
+            throw new IllegalArgumentException("Manufacturer name is required");
         }
 
         if (limit <= 0 || limit > 100) {
@@ -1018,10 +1018,10 @@ public class ProductserviceImpl {
 
         if (ProductDTO.getPublisher() != null) {
             if (!StringUtils.hasText(ProductDTO.getPublisher().getPublisherId())) {
-                throw new IllegalArgumentException("Publisher ID is required");
+                throw new IllegalArgumentException("Manufacturer ID is required");
             }
             if (!StringUtils.hasText(ProductDTO.getPublisher().getName())) {
-                throw new IllegalArgumentException("Publisher name is required");
+                throw new IllegalArgumentException("Manufacturer name is required");
             }
         }
     }
@@ -1056,6 +1056,7 @@ public class ProductserviceImpl {
         return Product.getStatus() == ProductStatus.ACTIVE;
     }
 
-    // ===== TODO: BẠN TỰ THÊM CÁC METHODS KHÁC Ở ĐÂY =====
+    // ===== TODO: Báº N Tá»° THÃŠM CÃC METHODS KHÃC á»ž ÄÃ‚Y =====
     
 }
+

@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.repository;
+﻿package com.nguyenvu.ecommercems.productservice.repository;
 
 import com.nguyenvu.ecommercems.productservice.model.ProductSeries;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -39,10 +39,10 @@ public interface ProductSeriesRepository extends MongoRepository<ProductSeries, 
     // - Find by reading level (beginner, intermediate, advanced)
     // - Find by target audience
 
-    // ===== PUBLISHER QUERIES =====
-    // TODO: Implement publisher-related queries
-    // - Find by publisher ID
-    // - Find by publisher name
+    // ===== Manufacturer QUERIES =====
+    // TODO: Implement Manufacturer-related queries
+    // - Find by Manufacturer ID
+    // - Find by Manufacturer name
 
     // ===== SEARCH QUERIES =====
     // TODO: Implement search functionality
@@ -84,3 +84,4 @@ public interface ProductSeriesRepository extends MongoRepository<ProductSeries, 
     // - Series with inventory issues
 
 }
+

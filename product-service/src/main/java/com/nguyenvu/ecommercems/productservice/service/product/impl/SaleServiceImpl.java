@@ -1,10 +1,10 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.impl;
+package com.nguyenvu.ecommercems.productservice.service.product.impl;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.dto.ProductSalesStatsDTO;
 import com.nguyenvu.ecommercems.productservice.mapper.ProductMapper;
 import com.nguyenvu.ecommercems.productservice.model.Product;
-import com.nguyenvu.ecommercems.productservice.service.Product.base.AbstractProductservice;
+import com.nguyenvu.ecommercems.productservice.service.product.base.AbstractProductService;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class ProductsaleServiceImpl extends AbstractProductservice {
+public class SaleServiceImpl extends AbstractProductService {
     private final ProductMapper ProductMapper;
 
     public void recordSale(String bookId, Integer quantity) {
@@ -135,11 +135,7 @@ public class ProductsaleServiceImpl extends AbstractProductservice {
                     .orElseThrow(() -> new ProductServiceException("Product not found with ID: " + bookId));
 
             return ProductSalesStatsDTO.builder()
-                    .bookId(Product.getId())
-                    .bookTitle(Product.getTitle())
-                    .totalSold(Product.g))
-                    .totalRevenue(Product.getTotalRevenue())
-                    .averageRating(Product.getAverageRating())
+                    //
                     .build();
 
         } catch (Exception e) {

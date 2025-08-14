@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.model;
+﻿package com.nguyenvu.ecommercems.productservice.model;
 
 import com.nguyenvu.ecommercems.productservice.model.embedded.*;
 import org.springframework.data.annotation.Id;
@@ -29,7 +29,7 @@ public class ProductSeries {
     private String slug;
     
     private String description;
-    private Publisher publisher;
+    private Manufacturer Manufacturer;
     
     // Series metadata
     private Integer totalProducts;
@@ -68,3 +68,4 @@ public class ProductSeries {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }
+

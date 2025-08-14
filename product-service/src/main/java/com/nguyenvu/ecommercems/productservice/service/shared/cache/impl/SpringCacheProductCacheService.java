@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.shared.cache.impl;
+﻿package com.nguyenvu.ecommercems.productservice.service.shared.cache.impl;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.cache.ProductCacheService;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
@@ -64,11 +64,11 @@ public class SpringCacheBookCacheService implements ProductCacheService {
 
     @Override
     public void evictByPublisher(String publisherId) {
-        log.debug("Evicting cache for publisher: {}", publisherId);
+        log.debug("Evicting cache for Manufacturer: {}", publisherId);
         
         evictFromCache(ProductServiceConstants.CACHE_Products_BY_PUBLISHER, publisherId);
         
-        log.debug("Cache evicted for publisher: {}", publisherId);
+        log.debug("Cache evicted for Manufacturer: {}", publisherId);
     }
 
     @Override
@@ -132,3 +132,4 @@ public class SpringCacheBookCacheService implements ProductCacheService {
         }
     }
 }
+

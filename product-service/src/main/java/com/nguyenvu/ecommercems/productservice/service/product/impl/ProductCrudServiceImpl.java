@@ -1,15 +1,15 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.impl;
+﻿package com.nguyenvu.ecommercems.productservice.service.product.impl;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.mapper.ProductMapper;
 import com.nguyenvu.ecommercems.productservice.model.Product;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
-import com.nguyenvu.ecommercems.productservice.service.Product.api.ProductCrudService;
-import com.nguyenvu.ecommercems.productservice.service.Product.base.AbstractProductservice;
-import com.nguyenvu.ecommercems.productservice.service.Product.validation.ProductValidator;
+import com.nguyenvu.ecommercems.productservice.service.product.api.ProductCrudService;
+import com.nguyenvu.ecommercems.productservice.service.product.base.AbstractProductService;
+import com.nguyenvu.ecommercems.productservice.service.product.validation.ProductValidator;
 import com.nguyenvu.ecommercems.productservice.service.shared.cache.ProductCacheService;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
-import com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.ProductDomainEventPublisher;
+import com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.ProductDomainEventPublisher;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductNotFoundException;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductServiceException;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductValidationException;
@@ -27,13 +27,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * BookCrudServiceImpl - Complete CRUD operations with validation, events, and caching
+ * ProductCrudServiceImpl - Complete CRUD operations with validation, events, and caching
  */
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class BookCrudServiceImpl extends AbstractProductservice implements ProductCrudService {
+public class ProductCrudServiceImpl extends AbstractProductService implements ProductCrudService {
     
     private final ProductRepository ProductRepository;
     private final ProductMapper ProductMapper;
@@ -45,15 +45,15 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
      * Create a new Product with full validation and event publishing
      */
     @Override
-    public ProductDTO createBook(ProductDTO ProductDTO) {
+    public ProductDTO createProduct(ProductDTO ProductDTO) {
         log.debug("Creating new Product: {}", ProductDTO.getTitle());
         
         try {
             ProductValidator.validateForCreate(ProductDTO);
-            ProductDTO savedProduct = saveBookTemplate(ProductDTO);
+            ProductDTO savedProduct = saveProductTemplate(ProductDTO);
             
-            log.info("Successfully created Product: {} (ID: {})", savedBook.getTitle(), savedBook.getId());
-            return savedBook;
+            log.info("Successfully created Product: {} (ID: {})", savedProduct.getTitle(), savedProduct.getId());
+            return savedProduct;
             
         } catch (Exception e) {
             log.error("Failed to create Product: {}", ProductDTO.getTitle(), e);
@@ -65,7 +65,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
      * Update existing Product with validation
      */
     @Override
-    public ProductDTO updateBook(ProductDTO ProductDTO) {
+    public ProductDTO updateProduct(ProductDTO ProductDTO) {
         log.debug("Updating Product: {}", ProductDTO.getId());
         
         try {
@@ -79,13 +79,13 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             ProductValidator.validateForUpdate(ProductDTO.getId(), ProductDTO);
             
             Product updatedProduct = ProductMapper.toEntity(ProductDTO);
-            updatedBook.setId(existingBook.getId());
-            updatedBook.setCreatedAt(existingBook.getCreatedAt());
-            updatedBook.setUpdatedAt(LocalDateTime.now());
+            updatedProduct.setId(existingProduct.getId());
+            updatedProduct.setCreatedAt(existingProduct.getCreatedAt());
+            updatedProduct.setUpdatedAt(LocalDateTime.now());
             
-            updatedProduct = updateBookTemplate(existingBook, updatedBook);
+            updatedProduct = updateProductTemplate(existingProduct, updatedProduct);
             
-            ProductDTO result = ProductMapper.toDTO(updatedBook);
+            ProductDTO result = ProductMapper.toDTO(updatedProduct);
             log.info("Successfully updated Product: {} (ID: {})", result.getTitle(), result.getId());
             return result;
             
@@ -117,23 +117,23 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             Product existingProduct = ProductRepository.findById(bookId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + bookId));
             
-            BigDecimal oldPrice = existingBook.getPricing().getSalePrice() != null ? 
-                existingBook.getPricing().getSalePrice() : existingBook.getPricing().getListPrice();
+            BigDecimal oldPrice = existingProduct.getPricing().getSalePrice() != null ?
+                existingProduct.getPricing().getSalePrice() : existingProduct.getPricing().getListPrice();
             
-            existingBook.getPricing().setSalePrice(newPrice);
-            existingBook.setUpdatedAt(LocalDateTime.now());
+            existingProduct.getPricing().setSalePrice(newPrice);
+            existingProduct.setUpdatedAt(LocalDateTime.now());
             
-            Product savedProduct = ProductRepository.save(existingBook);
+            Product savedProduct = ProductRepository.save(existingProduct);
             
-            eventPublisher.publishBookUpdatedEvent(savedBook.getId(), "SYSTEM", LocalDateTime.now());
+            eventPublisher.publishProductUpdatedEvent(savedProduct.getId(), "SYSTEM", LocalDateTime.now());
             
             cacheService.evictById(bookId);
-            extractCategoryIds(savedBook).forEach(cacheService::evictByCategory);
+            extractCategoryIds(savedProduct).forEach(cacheService::evictByCategory);
             cacheService.evictSearchCaches();
             
-            ProductDTO result = ProductMapper.toDTO(savedBook);
+            ProductDTO result = ProductMapper.toDTO(savedProduct);
             log.info("Successfully updated price for Product: {} from {} to {}", 
-                savedBook.getTitle(), oldPrice, newPrice);
+                savedProduct.getTitle(), oldPrice, newPrice);
             return result;
             
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
      * Delete Product with cascade cleanup
      */
     @Override
-    public void deleteBook(String bookId) {
+    public void deleteProduct(String bookId) {
         log.debug("Deleting Product ID: {}", bookId);
         
         try {
@@ -157,9 +157,9 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             Product existingProduct = ProductRepository.findById(bookId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + bookId));
             
-            deleteBookTemplate(existingBook);
+            deleteProductTemplate(existingProduct);
             
-            log.info("Successfully deleted Product: {} (ID: {})", existingBook.getTitle(), bookId);
+            log.info("Successfully deleted Product: {} (ID: {})", existingProduct.getTitle(), bookId);
             
         } catch (Exception e) {
             log.error("Failed to delete Product ID: {}", bookId, e);
@@ -189,7 +189,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             }
             
             List<ProductDTO> results = bookDTOs.stream()
-                .map(this::saveBookTemplate)
+                .map(this::saveProductTemplate)
                 .collect(Collectors.toList());
             
             log.info("Successfully created {} products in bulk", results.size());
@@ -225,7 +225,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             }
             
             for (Product Product : existingProducts) {
-                deleteBookTemplate(Product);
+                deleteProductTemplate(Product);
             }
             
             log.info("Successfully deleted {} products in bulk", existingProducts.size());
@@ -270,7 +270,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             Product existingProduct = ProductRepository.findById(bookId)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + bookId));
             
-            Integer currentStock = existingBook.getStockQuantity() != null ? existingBook.getStockQuantity() : 0;
+            Integer currentStock = existingProduct.getStockQuantity() != null ? existingProduct.getStockQuantity() : 0;
             Integer newStock;
             
             if (reason.startsWith("STOCK_UPDATE:")) {
@@ -287,10 +287,10 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
                 throw new ProductValidationException("Stock cannot be negative. Current: " + currentStock + ", Delta: " + delta);
             }
             
-            existingBook.setStockQuantity(newStock);
-            existingBook.setUpdatedAt(LocalDateTime.now());
+            existingProduct.setStockQuantity(newStock);
+            existingProduct.setUpdatedAt(LocalDateTime.now());
             
-            Product savedProduct = ProductRepository.save(existingBook);
+            Product savedProduct = ProductRepository.save(existingProduct);
             
             eventPublisher.publishStockChangedEvent(
                 bookId, currentStock, newStock, reason, LocalDateTime.now());
@@ -299,7 +299,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
             cacheService.evictSearchCaches();
             
             log.info("Successfully adjusted stock for Product: {} from {} to {} (reason: {})", 
-                savedBook.getTitle(), currentStock, newStock, reason);
+                savedProduct.getTitle(), currentStock, newStock, reason);
                 
         } catch (Exception e) {
             log.error("Failed to adjust stock for Product ID: {}", bookId, e);
@@ -317,7 +317,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
         if (Product.getId() == null) {
             Product.setCreatedAt(now);
             if (!StringUtils.hasText(Product.getCode())) {
-                Product.setCode(generateBookCode());
+                Product.setCode(generateProductCode());
             }
         }
         Product.setUpdatedAt(now);
@@ -333,40 +333,40 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
     protected void afterSave(Product Product) {
         log.debug("After save operations for Product: {}", Product.getTitle());
         
-        eventPublisher.publishBookCreatedEvent(
+        eventPublisher.publishProductCreatedEvent(
             Product.getId(), 
             Product.getCode(), 
-            Product.getIsbn(),
+            Product.getSku(),
             Product.getTitle(),
             LocalDateTime.now()
         );
         
         cacheService.evictAll();
         extractCategoryIds(Product).forEach(cacheService::evictByCategory);
-        extractAuthorNames(Product).forEach(cacheService::evictByAuthor);
+        extractSupplierNames(Product).forEach(cacheService::evictBySupplier);
         
         log.debug("After save operations completed for Product: {}", Product.getTitle());
     }
 
     @Override
-    protected void afterUpdate(Product oldBook, Product newBook) {
-        log.debug("After update operations for Product: {}", newBook.getTitle());
+    protected void afterUpdate(Product oldProduct, Product newProduct) {
+        log.debug("After update operations for Product: {}", newProduct.getTitle());
         
-        eventPublisher.publishBookUpdatedEvent(
-            newBook.getId(),
+        eventPublisher.publishProductUpdatedEvent(
+            newProduct.getId(),
             "SYSTEM",
             LocalDateTime.now()
         );
         
-        cacheService.evictById(newBook.getId());
-        extractCategoryIds(newBook).forEach(cacheService::evictByCategory);
-        extractAuthorNames(newBook).forEach(cacheService::evictByAuthor);
+        cacheService.evictById(newProduct.getId());
+        extractCategoryIds(newProduct).forEach(cacheService::evictByCategory);
+        extractSupplierNames(newProduct).forEach(cacheService::evictBySupplier);
         
-        if (!oldBook.getPricing().equals(newBook.getPricing())) {
+        if (!oldProduct.getPricing().equals(newProduct.getPricing())) {
             cacheService.evictSearchCaches();
         }
         
-        log.debug("After update operations completed for Product: {}", newBook.getTitle());
+        log.debug("After update operations completed for Product: {}", newProduct.getTitle());
     }
 
     @Override
@@ -376,7 +376,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
         cacheService.evictById(Product.getId());
         cacheService.evictAll();
         extractCategoryIds(Product).forEach(cacheService::evictByCategory);
-        extractAuthorNames(Product).forEach(cacheService::evictByAuthor);
+        extractSupplierNames(Product).forEach(cacheService::evictBySupplier);
         
         log.debug("After delete operations completed for Product: {}", Product.getTitle());
     }
@@ -386,7 +386,7 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
     /**
      * Generate unique Product code
      */
-    private String generateBookCode() {
+    private String generateProductCode() {
         return "Product-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
@@ -403,10 +403,11 @@ public class BookCrudServiceImpl extends AbstractProductservice implements Produ
     /**
      * Extract Supplier names from Product for cache eviction
      */
-    private List<String> extractAuthorNames(Product Product) {
-        return Product.getAuthors() != null ? 
-            Product.getAuthors().stream()
+    private List<String> extractSupplierNames(Product Product) {
+        return Product.getSuppliers() != null ?
+            Product.getSuppliers().stream()
                 .map(Supplier -> Supplier.getName())
                 .collect(Collectors.toList()) : List.of();
     }
 }
+

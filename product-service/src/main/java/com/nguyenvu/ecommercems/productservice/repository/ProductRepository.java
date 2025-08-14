@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.repository;
+﻿package com.nguyenvu.ecommercems.productservice.repository;
 
 import com.nguyenvu.ecommercems.productservice.dto.StockMovementDTO;
 import com.nguyenvu.ecommercems.productservice.model.Product;
@@ -88,11 +88,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     @Query(value = "{'Suppliers.name': {'$in': ?0}, " + ACTIVE_Products_FILTER + "}")
     List<Product> findByMultipleAuthors(List<String> authorNames);
 
-    // ===== PUBLISHER QUERIES =====
-    @Query(value = "{'publisher.publisherId': ?0, " + ACTIVE_Products_FILTER + "}")
+    // ===== Manufacturer QUERIES =====
+    @Query(value = "{'Manufacturer.publisherId': ?0, " + ACTIVE_Products_FILTER + "}")
     List<Product> findByPublisherId(String publisherId);
 
-    @Query(value = "{'publisher.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Manufacturer.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_Products_FILTER + "}")
     List<Product> findByPublisherName(String publisherName);
 
     @Query(value = "{'publishedDate': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PUBLISHED_DESC + "}")
@@ -294,3 +294,4 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<StockMovementDTO> findStockMovementsByBookIdAndDateRange(String bookId, LocalDateTime from, LocalDateTime to);
 
 }
+

@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.shared.cache;
+﻿package com.nguyenvu.ecommercems.productservice.service.shared.cache;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface ProductCacheService {
      * Evict cache entry by ISBN
      * @param isbn ISBN to evict from cache
      */
-    void evictByIsbn(String isbn);
+    void evictBySku(String isbn);
     
     /**
      * Evict cache entry by Product code
@@ -47,13 +47,14 @@ public interface ProductCacheService {
     
     /**
      * Evict Supplier-related caches
-     * @param authorId Supplier ID
+     * @param supplierId Supplier ID
      */
-    void evictByAuthor(String authorId);
+    void evictBySupplier(String supplierId);
     
     /**
-     * Evict publisher-related caches
-     * @param publisherId Publisher ID
+     * Evict Manufacturer-related caches
+     * @param publisherId Manufacturer ID
      */
     void evictByPublisher(String publisherId);
 }
+

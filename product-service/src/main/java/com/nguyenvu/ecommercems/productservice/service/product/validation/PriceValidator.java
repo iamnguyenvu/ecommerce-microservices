@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.validation;
+package com.nguyenvu.ecommercems.productservice.service.product.validation;
 
 import com.nguyenvu.ecommercems.productservice.model.embedded.Pricing;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductValidationException;

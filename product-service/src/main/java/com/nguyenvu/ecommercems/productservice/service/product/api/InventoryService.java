@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.api;
+package com.nguyenvu.ecommercems.productservice.service.product.api;
 
 import com.nguyenvu.ecommercems.productservice.dto.ApiResponse;
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;

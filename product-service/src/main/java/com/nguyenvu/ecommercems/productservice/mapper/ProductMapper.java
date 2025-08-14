@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.mapper;
+﻿package com.nguyenvu.ecommercems.productservice.mapper;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.model.Product;
@@ -28,7 +28,7 @@ public interface ProductMapper {
     @Mapping(target = "stockQuantity", source = "stockQuantity")
     @Mapping(target = "availability", source = "availability")
     @Mapping(target = "status", source = "status")
-    @Mapping(target = "publisher", source = "publisher")
+    @Mapping(target = "Manufacturer", source = "Manufacturer")
     @Mapping(target = "publishedDate", source = "publishedDate")
     @Mapping(target = "publishedYear", source = "publishedYear")
     @Mapping(target = "edition", source = "edition")
@@ -85,3 +85,4 @@ public interface ProductMapper {
     @Mapping(target = "updatedAt", ignore = true)
     void updateEntityFromDTO(ProductDTO dto, @MappingTarget Product Product);
 }
+

@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.impl;
+﻿package com.nguyenvu.ecommercems.productservice.service.product.impl;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.dto.ProductSearchCriteria;
@@ -7,8 +7,8 @@ import com.nguyenvu.ecommercems.productservice.model.Product;
 import com.nguyenvu.ecommercems.productservice.model.enums.Availability;
 import com.nguyenvu.ecommercems.productservice.model.enums.ProductStatus;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
-import com.nguyenvu.ecommercems.productservice.service.Product.api.ProductSearchService;
-import com.nguyenvu.ecommercems.productservice.service.Product.base.AbstractProductservice;
+import com.nguyenvu.ecommercems.productservice.service.product.api.ProductSearchService;
+import com.nguyenvu.ecommercems.productservice.service.product.base.AbstractProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class ProductsearchServiceImpl extends AbstractProductservice implements ProductSearchService {
+public class ProductSearchServiceImpl extends AbstractProductService implements ProductSearchService {
     private final ProductRepository ProductRepository;
     private final ProductMapper ProductMapper;
     private final MongoTemplate mongoTemplate;
@@ -125,14 +125,14 @@ public class ProductsearchServiceImpl extends AbstractProductservice implements 
             query.addCriteria(Criteria.where("Suppliers.name").in(criteria.getAuthorNames()));
         }
 
-        // Publisher filter
+        // Manufacturer filter
         if (StringUtils.hasText(criteria.getPublisherId())) {
-            query.addCriteria(Criteria.where("publisher.publisherId").is(criteria.getPublisherId()));
+            query.addCriteria(Criteria.where("Manufacturer.publisherId").is(criteria.getPublisherId()));
         }
 
-        // Publisher name filter
+        // Manufacturer name filter
         if (StringUtils.hasText(criteria.getPublisherName())) {
-            query.addCriteria(Criteria.where("publisher.name").regex(criteria.getPublisherName(), "i"));
+            query.addCriteria(Criteria.where("Manufacturer.name").regex(criteria.getPublisherName(), "i"));
         }
 
         // Availability filter
@@ -315,9 +315,9 @@ public class ProductsearchServiceImpl extends AbstractProductservice implements 
                 .toList();
     }
 
-    // ===== Product OPERATIONS BY PUBLISHER =====
+    // ===== Product OPERATIONS BY Manufacturer =====
     /**
-     * Get products by publisher
+     * Get products by Manufacturer
      */
     public List<ProductDTO> getProductsByPublisher(String publisherId) {
         return getProductsByPublisher(publisherId, 50); // Default limit of 50
@@ -325,11 +325,11 @@ public class ProductsearchServiceImpl extends AbstractProductservice implements 
 
     @Override
     public List<ProductDTO> getProductsByPublisher(String publisherId, int limit) {
-        log.debug("Getting {} products by publisher: {}", limit, publisherId);
+        log.debug("Getting {} products by Manufacturer: {}", limit, publisherId);
 
         // Validate publisherId
         if (!StringUtils.hasText(publisherId)) {
-            throw new IllegalArgumentException("Publisher ID is required");
+            throw new IllegalArgumentException("Manufacturer ID is required");
         }
 
         if (limit <= 0 || limit > 100) {
@@ -352,11 +352,11 @@ public class ProductsearchServiceImpl extends AbstractProductservice implements 
 
     @Override
     public List<ProductDTO> getProductsByPublisherName(String publisherName, int limit) {
-        log.debug("Getting {} products by publisher name: {}", limit, publisherName);
+        log.debug("Getting {} products by Manufacturer name: {}", limit, publisherName);
 
         // Validate publisherName
         if (!StringUtils.hasText(publisherName)) {
-            throw new IllegalArgumentException("Publisher name is required");
+            throw new IllegalArgumentException("Manufacturer name is required");
         }
 
         if (limit <= 0 || limit > 100) {
@@ -528,3 +528,4 @@ public class ProductsearchServiceImpl extends AbstractProductservice implements 
                 .toList();
     }
 }
+

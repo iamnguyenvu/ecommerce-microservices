@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.dto;
+﻿package com.nguyenvu.ecommercems.productservice.dto;
 
 import com.nguyenvu.ecommercems.productservice.model.enums.Availability;
 import com.nguyenvu.ecommercems.productservice.model.enums.Format;
@@ -30,9 +30,9 @@ public class ProductSearchCriteria {
     private List<String> authorNames;       // Multiple Supplier names (exact match)
     private List<String> SupplierRole;        // Supplier roles filter
     
-    // ===== PUBLISHER FILTERS =====
-    private String publisherId;             // Publisher ID (exact match)
-    private String publisherName;           // Publisher name (partial match)
+    // ===== Manufacturer FILTERS =====
+    private String publisherId;             // Manufacturer ID (exact match)
+    private String publisherName;           // Manufacturer name (partial match)
     
     // ===== PRICE FILTERS =====
     private BigDecimal minPrice;            // Minimum sale price
@@ -125,3 +125,4 @@ public class ProductSearchCriteria {
     private String difficulty;              // Difficulty level
     private String targetAudience;          // Target audience
 }
+

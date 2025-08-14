@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class StockMovementDTO {
     private String id;
-    private String bookId;
+    private String productId;
     private String title;
     private Integer previousStock;
     private Integer nextStock;

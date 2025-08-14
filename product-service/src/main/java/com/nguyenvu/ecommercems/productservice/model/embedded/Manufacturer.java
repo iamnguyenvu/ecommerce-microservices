@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.model.embedded;
+﻿package com.nguyenvu.ecommercems.productservice.model.embedded;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Publisher {
-    private String publisherId;         // Reference to Publisher collection
+public class Manufacturer {
+    private String publisherId;         // Reference to Manufacturer collection
     private String name;                // Cached for display
 }
+
+

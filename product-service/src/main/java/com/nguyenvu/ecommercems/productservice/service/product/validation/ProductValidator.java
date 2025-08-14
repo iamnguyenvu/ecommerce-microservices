@@ -1,10 +1,10 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.validation;
+﻿package com.nguyenvu.ecommercems.productservice.service.product.validation;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.model.embedded.Supplier;
 import com.nguyenvu.ecommercems.productservice.model.embedded.ProductCategory;
 import com.nguyenvu.ecommercems.productservice.model.embedded.Pricing;
-import com.nguyenvu.ecommercems.productservice.model.embedded.Publisher;
+import com.nguyenvu.ecommercems.productservice.model.embedded.Manufacturer;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductValidationException;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
@@ -77,10 +77,6 @@ public class ProductValidator {
             throw new ProductValidationException("Product title is required");
         }
         
-        if (Product.getAuthors() == null || Product.getAuthors().isEmpty()) {
-            throw new ProductValidationException("Product must have at least one Supplier");
-        }
-        
         if (Product.getCategories() == null || Product.getCategories().isEmpty()) {
             throw new ProductValidationException("Product must have at least one category");
         }
@@ -90,7 +86,7 @@ public class ProductValidator {
         }
         
         if (Product.getPublisher() == null) {
-            throw new ProductValidationException("Product publisher information is required");
+            throw new ProductValidationException("Product Manufacturer information is required");
         }
         
         // ISBN is optional but if provided must be valid
@@ -104,7 +100,7 @@ public class ProductValidator {
      */
     private void validateBusinessRules(ProductDTO Product) {
         validateTitle(Product.getTitle());
-        validateAuthors(Product.getAuthors());
+        validateSuppliers(Product.getSuppliers());
         validateCategories(Product.getCategories());
         validatePricing(Product.getPricing());
         validatePublisher(Product.getPublisher());
@@ -130,18 +126,18 @@ public class ProductValidator {
     /**
      * Validate Suppliers
      */
-    private void validateAuthors(List<Supplier> Suppliers) {
-        if (Suppliers.size() > ProductServiceConstants.MAX_AUTHORS_PER_BOOK) {
-            throw new ProductValidationException("Product cannot have more than " + ProductServiceConstants.MAX_AUTHORS_PER_Product + " Suppliers");
+    private void validateSuppliers(List<Supplier> Suppliers) {
+        if (Suppliers.size() > ProductServiceConstants.MAX_CATEGORIES_PER_PRODUCT) {
+            throw new ProductValidationException("Product cannot have more than " + ProductServiceConstants.MAX_CATEGORIES_PER_PRODUCT + " Suppliers");
         }
-        
+
         for (Supplier Supplier : Suppliers) {
             if (!StringUtils.hasText(Supplier.getName())) {
                 throw new ProductValidationException("Supplier name cannot be empty");
             }
-            
-            if (Supplier.getName().length() > ProductServiceConstants.MAX_AUTHOR_NAME_LENGTH) {
-                throw new ProductValidationException("Supplier name cannot exceed " + ProductServiceConstants.MAX_AUTHOR_NAME_LENGTH + " characters");
+
+            if (Supplier.getName().length() > ProductServiceConstants.MAX_SUPPLIER_NAME_LENGTH) {
+                throw new ProductValidationException("Supplier name cannot exceed " + ProductServiceConstants.MAX_SUPPLIER_NAME_LENGTH + " characters");
             }
         }
     }
@@ -150,8 +146,8 @@ public class ProductValidator {
      * Validate categories
      */
     private void validateCategories(List<ProductCategory> categories) {
-        if (categories.size() > ProductServiceConstants.MAX_CATEGORIES_PER_BOOK) {
-            throw new ProductValidationException("Product cannot have more than " + ProductServiceConstants.MAX_CATEGORIES_PER_Product + " categories");
+        if (categories.size() > ProductServiceConstants.MAX_CATEGORIES_PER_PRODUCT) {
+            throw new ProductValidationException("Product cannot have more than " + ProductServiceConstants.MAX_CATEGORIES_PER_PRODUCT + " categories");
         }
         
         for (ProductCategory category : categories) {
@@ -173,15 +169,15 @@ public class ProductValidator {
     }
 
     /**
-     * Validate publisher
+     * Validate Manufacturer
      */
-    private void validatePublisher(Publisher publisher) {
-        if (!StringUtils.hasText(publisher.getName())) {
-            throw new ProductValidationException("Publisher name is required");
+    private void validatePublisher(Manufacturer Manufacturer) {
+        if (!StringUtils.hasText(Manufacturer.getName())) {
+            throw new ProductValidationException("Manufacturer name is required");
         }
         
-        if (publisher.getName().length() > ProductServiceConstants.MAX_PUBLISHER_NAME_LENGTH) {
-            throw new ProductValidationException("Publisher name cannot exceed " + ProductServiceConstants.MAX_PUBLISHER_NAME_LENGTH + " characters");
+        if (Manufacturer.getName().length() > ProductServiceConstants.MAX_PUBLISHER_NAME_LENGTH) {
+            throw new ProductValidationException("Manufacturer name cannot exceed " + ProductServiceConstants.MAX_PUBLISHER_NAME_LENGTH + " characters");
         }
     }
 
@@ -206,34 +202,34 @@ public class ProductValidator {
     }
 
     /**
-     * Validate release time (chỉ cho sách cực kỳ hot có thời điểm mở bán chính xác)
+     * Validate release time (chá»‰ cho sÃ¡ch cá»±c ká»³ hot cÃ³ thá»i Ä‘iá»ƒm má»Ÿ bÃ¡n chÃ­nh xÃ¡c)
      */
     private void validateHotReleaseTime(LocalDateTime releaseTime, LocalDate publishedDate) {
         if (releaseTime != null) {
-            // Release time phải có publishedDate
+            // Release time pháº£i cÃ³ publishedDate
             if (publishedDate == null) {
                 throw new ProductValidationException("Published date is required when release time is specified");
             }
             
-            // Release time phải cùng ngày với publishedDate
+            // Release time pháº£i cÃ¹ng ngÃ y vá»›i publishedDate
             if (!releaseTime.toLocalDate().equals(publishedDate)) {
                 throw new ProductValidationException("Release time must be on the same date as published date");
             }
             
             LocalDateTime now = LocalDateTime.now();
             
-            // Phải lên lịch trước ít nhất 2 giờ cho hot release
+            // Pháº£i lÃªn lá»‹ch trÆ°á»›c Ã­t nháº¥t 2 giá» cho hot release
             if (releaseTime.isBefore(now.plusHours(2))) {
                 throw new ProductValidationException("Hot release must be scheduled at least 2 hours in advance");
             }
             
-            // Khuyến cáo khung giờ hợp lý cho hot release (8:00 - 22:00)
+            // Khuyáº¿n cÃ¡o khung giá» há»£p lÃ½ cho hot release (8:00 - 22:00)
             int hour = releaseTime.getHour();
             if (hour < 8 || hour > 22) {
                 log.warn("Hot release scheduled for {}:00 - consider scheduling between 8:00-22:00 for better user engagement", hour);
             }
             
-            // Không nên lên lịch quá xa trong tương lai
+            // KhÃ´ng nÃªn lÃªn lá»‹ch quÃ¡ xa trong tÆ°Æ¡ng lai
             if (releaseTime.isAfter(now.plusMonths(6))) {
                 throw new ProductValidationException("Release time cannot be more than 6 months in the future");
             }
@@ -304,3 +300,4 @@ public class ProductValidator {
         }
     }
 }
+

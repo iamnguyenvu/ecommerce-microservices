@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.api;
+package com.nguyenvu.ecommercems.productservice.service.product.api;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 
@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface ProductCrudService {
     // ===== BASIC CRUD ======
-    ProductDTO createBook(ProductDTO ProductDTO);
-    ProductDTO updateBook(ProductDTO ProductDTO);
+    ProductDTO createProduct(ProductDTO ProductDTO);
+    ProductDTO updateProduct(ProductDTO ProductDTO);
     ProductDTO patchPrice(String bookId, Double price);
-    void deleteBook(String bookId);
+    void deleteProduct(String bookId);
 
     // ===== BATCH OPERATIONS ======
     List<ProductDTO> createProducts(List<ProductDTO> bookDTOs);

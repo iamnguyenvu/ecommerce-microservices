@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ProductReviewDTO {
     private String reviewId;
-    private String bookId;
+    private String productId;
     private String userId;
     private String username;
     private Double rating;

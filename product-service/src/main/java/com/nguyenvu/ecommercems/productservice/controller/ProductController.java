@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productService.controller;
+﻿package com.nguyenvu.ecommercems.productService.controller;
 
 import com.nguyenvu.ecommercems.productService.dto.*;
 import com.nguyenvu.ecommercems.productService.service.product.ProductService;
@@ -465,15 +465,15 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // ===== PUBLISHER ENDPOINTS =====
+    // ===== Manufacturer ENDPOINTS =====
 
     /**
-     * Get products by publisher ID
+     * Get products by Manufacturer ID
      */
     @GetMapping("/publishers/id/{publisherId}")
-    @Operation(summary = "Get products by publisher ID", description = "Retrieve products published by a specific publisher")
+    @Operation(summary = "Get products by Manufacturer ID", description = "Retrieve products published by a specific Manufacturer")
     public ResponseEntity<List<ProductDTO>> getProductsByPublisherId(
-            @Parameter(description = "Publisher ID", required = true)
+            @Parameter(description = "Manufacturer ID", required = true)
             @PathVariable String publisherId,
             @RequestParam(defaultValue = "50") int limit) {
 
@@ -489,12 +489,12 @@ public class ProductController {
     }
 
     /**
-     * Get products by publisher name
+     * Get products by Manufacturer name
      */
     @GetMapping("/publishers/name/{publisherName}")
-    @Operation(summary = "Get products by publisher name", description = "Retrieve products published by a specific publisher")
+    @Operation(summary = "Get products by Manufacturer name", description = "Retrieve products published by a specific Manufacturer")
     public ResponseEntity<List<ProductDTO>> getProductsByPublisherName(
-            @Parameter(description = "Publisher name", required = true)
+            @Parameter(description = "Manufacturer name", required = true)
             @PathVariable String publisherName,
             @RequestParam(defaultValue = "50") int limit) {
 
@@ -582,7 +582,7 @@ public class ProductController {
             
             ApiResponse errorResponse = ApiResponse.builder()
                     .success(false)
-                    .message("Không thể kiểm tra quyền đánh giá: " + e.getMessage())
+                    .message("KhÃ´ng thá»ƒ kiá»ƒm tra quyá»n Ä‘Ã¡nh giÃ¡: " + e.getMessage())
                     .build();
                     
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -613,7 +613,7 @@ public class ProductController {
             if (request.getRating() < 1 || request.getRating() > 5) {
                 return ResponseEntity.badRequest().body(ApiResponse.builder()
                         .success(false)
-                        .message("Đánh giá phải từ 1 đến 5 sao")
+                        .message("ÄÃ¡nh giÃ¡ pháº£i tá»« 1 Ä‘áº¿n 5 sao")
                         .build());
             }
 
@@ -673,3 +673,4 @@ public class ProductController {
     }
     
 }
+

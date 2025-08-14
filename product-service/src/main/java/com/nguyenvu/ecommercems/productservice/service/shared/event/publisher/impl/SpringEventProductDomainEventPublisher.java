@@ -1,7 +1,7 @@
-package com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.impl;
+﻿package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.impl;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.*;
-import com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.ProductDomainEventPublisher;
+import com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.ProductDomainEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +13,11 @@ import java.time.OffsetDateTime;
  * Spring event-based implementation of ProductDomainEventPublisher
  */
 @Component
-public class SpringEventBookDomainEventPublisher implements ProductDomainEventPublisher {
+public class SpringEventProductDomainEventPublisher implements ProductDomainEventPublisher {
     
     private final ApplicationEventPublisher eventPublisher;
     
-    public SpringEventBookDomainEventPublisher(ApplicationEventPublisher eventPublisher) {
+    public SpringEventProductDomainEventPublisher(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
     
@@ -91,3 +91,4 @@ public class SpringEventBookDomainEventPublisher implements ProductDomainEventPu
         publishSalesRecorded(event);
     }
 }
+

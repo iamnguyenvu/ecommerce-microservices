@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.impl;
+package com.nguyenvu.ecommercems.productservice.service.product.impl;
 
 import com.nguyenvu.ecommercems.productservice.dto.ApiResponse;
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
@@ -6,8 +6,8 @@ import com.nguyenvu.ecommercems.productservice.dto.StockMovementDTO;
 import com.nguyenvu.ecommercems.productservice.mapper.ProductMapper;
 import com.nguyenvu.ecommercems.productservice.model.Product;
 import com.nguyenvu.ecommercems.productservice.repository.ProductRepository;
-import com.nguyenvu.ecommercems.productservice.service.Product.api.InventoryService;
-import com.nguyenvu.ecommercems.productservice.service.Product.base.AbstractProductservice;
+import com.nguyenvu.ecommercems.productservice.service.product.api.InventoryService;
+import com.nguyenvu.ecommercems.productservice.service.product.base.AbstractProductService;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductServiceException;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BookInventoryServiceImpl extends AbstractProductservice implements InventoryService {
+public class InventoryServiceImpl extends AbstractProductService implements InventoryService {
     private final ProductMapper ProductMapper;
 
     private final ProductRepository ProductRepository;

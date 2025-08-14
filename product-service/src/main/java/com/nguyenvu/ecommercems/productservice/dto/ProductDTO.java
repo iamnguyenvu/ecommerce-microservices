@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.dto;
+﻿package com.nguyenvu.ecommercems.productservice.dto;
 
 import com.nguyenvu.ecommercems.productservice.model.embedded.*;
 import com.nguyenvu.ecommercems.productservice.model.enums.*;
@@ -23,12 +23,12 @@ public class ProductDTO {
     
     private String id;
     
-    // ===== THÔNG TIN CƠ BẢN =====
+    // ===== THÃ”NG TIN CÆ  Báº¢N =====
     @NotBlank(message = "Product code is required")
-    private String code;                    // Mã sách nội bộ (BOOK2024001)
+    private String code;                    // MÃ£ sÃ¡ch ná»™i bá»™ (BOOK2024001)
 
     @NotBlank(message = "ISBN is required")
-    private String isbn;                    // ISBN-13
+    private String sku;                    // ISBN-13
     
     @NotBlank(message = "Product title is required")
     private String title;
@@ -36,34 +36,34 @@ public class ProductDTO {
     private String subtitle;
     private String description;
     
-    // ===== THÔNG TIN XUẤT BẢN =====
-    private Publisher publisher;
+    // ===== THÃ”NG TIN XUáº¤T Báº¢N =====
+    private Manufacturer Manufacturer;
     private Integer publishedYear;
-    private LocalDate publishedDate;          // Ngày xuất bản (tất cả sách)
-    private LocalDateTime releaseTime;        // Thời điểm mở bán chính xác (chỉ sách cực kỳ hot)
+    private LocalDate publishedDate;          // NgÃ y xuáº¥t báº£n (táº¥t cáº£ sÃ¡ch)
+    private LocalDateTime releaseTime;        // Thá»i Ä‘iá»ƒm má»Ÿ bÃ¡n chÃ­nh xÃ¡c (chá»‰ sÃ¡ch cá»±c ká»³ hot)
     private String edition;
     
-    // ===== THÔNG TIN VẬT LÝ =====
+    // ===== THÃ”NG TIN Váº¬T LÃ =====
     private Physical physical;              // Format, language, pageCount, dimensions, weight
     
-    // ===== TÁC GIẢ =====
+    // ===== TÃC GIáº¢ =====
     private List<Supplier> Suppliers;
     
-    // ===== PHÂN LOẠI =====
+    // ===== PHÃ‚N LOáº I =====
     private List<ProductCategory> categories;
     private List<String> subjects;
     private AgeGroup ageGroup;              // enum: CHILDREN, TEEN, ADULT, ALL_AGES
     
-    // ===== GIÁ CẢ =====
+    // ===== GIÃ Cáº¢ =====
     private Pricing pricing;
     
-    // ===== HÌNH ẢNH =====
+    // ===== HÃŒNH áº¢NH =====
     private Images images;
     
-    // ===== ĐÁNH GIÁ CHI TIẾT =====
+    // ===== ÄÃNH GIÃ CHI TIáº¾T =====
     private Rating rating;
     
-    // ===== TRẠNG THÁI & KHO =====
+    // ===== TRáº NG THÃI & KHO =====
     private ProductStatus status;              // enum: ACTIVE, INACTIVE, DISCONTINUED, PRE_ORDER
     private Availability availability;      // enum: IN_STOCK, OUT_OF_STOCK, PRE_ORDER, LIMITED
     
@@ -94,3 +94,4 @@ public class ProductDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
+

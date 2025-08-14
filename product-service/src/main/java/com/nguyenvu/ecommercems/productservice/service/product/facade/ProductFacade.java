@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.Product.facade;
+package com.nguyenvu.ecommercems.productservice.service.product.facade;
 
 public interface ProductFacade {
 }

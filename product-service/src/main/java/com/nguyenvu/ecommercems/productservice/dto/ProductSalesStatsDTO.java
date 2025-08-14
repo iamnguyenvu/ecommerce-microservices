@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductSalesStatsDTO {
-    private String bookId;
-    private String bookTitle;
+    private String productId;
+    private String productTitle;
     private Integer totalSold;
     private Integer dailySold;
     private Integer weeklySold;
