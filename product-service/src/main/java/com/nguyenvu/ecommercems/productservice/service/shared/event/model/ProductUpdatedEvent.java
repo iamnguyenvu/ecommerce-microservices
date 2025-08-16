@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class ProductUpdatedEvent {
     
-    String bookId;
+    String productId;
     String updatedBy;
     OffsetDateTime occurredAt;
 }

@@ -11,15 +11,15 @@ public interface ProductCacheService {
     
     /**
      * Evict cache entry by Product ID
-     * @param bookId Product ID to evict from cache
+     * @param productId Product ID to evict from cache
      */
-    void evictById(String bookId);
+    void evictById(String productId);
     
     /**
-     * Evict cache entry by ISBN
-     * @param isbn ISBN to evict from cache
+     * Evict cache entry by SKU
+     * @param sku SKU to evict from cache
      */
-    void evictBySku(String isbn);
+    void evictBySku(String sku);
     
     /**
      * Evict cache entry by Product code

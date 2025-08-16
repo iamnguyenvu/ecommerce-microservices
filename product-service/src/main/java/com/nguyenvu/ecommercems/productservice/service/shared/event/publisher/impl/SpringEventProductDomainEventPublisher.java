@@ -1,7 +1,7 @@
-package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.impl;
+package com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.impl;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.*;
-import com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.ProductDomainEventPublisher;
+import com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.ProductDomainEventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -42,11 +42,11 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     }
     
     @Override
-    public void publishProductCreatedEvent(String productId, String code, String isbn, String title, LocalDateTime occurredAt) {
+    public void publishProductCreatedEvent(String productId, String code, String sku, String title, LocalDateTime occurredAt) {
         ProductCreatedEvent event = ProductCreatedEvent.builder()
-                .bookId(productId)
+                .productId(productId)
                 .code(code)
-                .isbn(isbn)
+                .sku(sku)
                 .title(title)
                 .occurredAt(occurredAt.atOffset(java.time.ZoneOffset.UTC))
                 .build();
@@ -56,7 +56,7 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     @Override
     public void publishProductUpdatedEvent(String productId, String updatedBy, LocalDateTime occurredAt) {
         ProductUpdatedEvent event = ProductUpdatedEvent.builder()
-                .bookId(productId)
+                .productId(productId)
                 .updatedBy(updatedBy)
                 .occurredAt(occurredAt.atOffset(java.time.ZoneOffset.UTC))
                 .build();
@@ -67,7 +67,7 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     public void publishStockChangedEvent(String productId, Integer previousStock, Integer newStock, String reason, LocalDateTime occurredAt) {
         Integer delta = newStock - previousStock;
         StockChangedEvent event = StockChangedEvent.builder()
-                .bookId(productId)
+                .productId(productId)
                 .oldStock(previousStock)
                 .newStock(newStock)
                 .delta(delta)
@@ -80,7 +80,7 @@ public class SpringEventProductDomainEventPublisher implements ProductDomainEven
     @Override
     public void publishSalesRecordedEvent(String productId, String orderId, Integer quantitySold, BigDecimal unitPrice, BigDecimal totalAmount, String customerId, LocalDateTime occurredAt) {
         SalesRecordedEvent event = SalesRecordedEvent.builder()
-                .bookId(productId)
+                .productId(productId)
                 .orderId(orderId)
                 .quantitySold(quantitySold)
                 .unitPrice(unitPrice)

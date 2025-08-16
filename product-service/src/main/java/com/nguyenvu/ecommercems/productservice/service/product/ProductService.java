@@ -15,17 +15,17 @@ public interface ProductService {
     // ===== BASIC CRUD OPERATIONS =====
     Page<ProductDTO> getAllProducts(Pageable pageable);
     
-    ProductDTO getBookById(String id);
+    ProductDTO getProductById(String id);
     
-    ProductDTO getBookByCode(String code);
+    ProductDTO getProductByCode(String code);
     
-    ProductDTO getBookByIsbn(String isbn);
+    ProductDTO getProductBySku(String sku);
     
-    ProductDTO saveBook(ProductDTO productDTO);
+    ProductDTO saveProduct(ProductDTO productDTO);
     
-    ProductDTO updateBook(String id, ProductDTO productDTO);
+    ProductDTO updateProduct(String id, ProductDTO productDTO);
     
-    void deleteBook(String id);
+    void deleteProduct(String id);
 
     // ===== SEARCH OPERATIONS =====
     List<ProductDTO> searchProducts(String query);
@@ -63,23 +63,23 @@ public interface ProductService {
     List<ProductDTO> getSimilarProducts(String id, int limit);
 
     // ===== SUPPLIER OPERATIONS =====
-    List<ProductDTO> getProductsByAuthor(String authorId, int limit);
+    List<ProductDTO> getProductsBySupplier(String supplierId, int limit);
     
-    List<ProductDTO> getProductsByAuthorName(String authorName, int limit);
+    List<ProductDTO> getProductsBySupplierName(String supplierName, int limit);
 
     // ===== MANUFACTURER OPERATIONS =====
-    List<ProductDTO> getProductsByPublisher(String publisherId, int limit);
+    List<ProductDTO> getProductsByManufacturer(String manufacturerId, int limit);
     
-    List<ProductDTO> getProductsByPublisherName(String publisherName, int limit);
+    List<ProductDTO> getProductsByManufacturerName(String manufacturerName, int limit);
 
     // ===== SERIES OPERATIONS =====
     List<ProductDTO> getProductsBySeries(String seriesId, int limit);
 
     // ===== RATING OPERATIONS =====
-    boolean canUserRate(String bookId, String userId);
+    boolean canUserRate(String productId, String userId);
     
-    ApiResponse addRating(String bookId, ProductRatingRequest request);
+    ApiResponse addRating(String productId, ProductRatingRequest request);
     
-    RatingStatsDTO getRatingStats(String bookId);
+    RatingStatsDTO getRatingStats(String productId);
 }
 

@@ -24,9 +24,6 @@ public class ProductDTO {
     private String id;
     
     // ===== BASIC INFORMATION =====
-    @NotBlank(message = "Product code is required")
-    private String code;                    // Internal product code (PROD2024001)
-
     @NotBlank(message = "SKU is required")
     private String sku;                     // Stock Keeping Unit (LAPTOP-001)
     

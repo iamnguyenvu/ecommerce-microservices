@@ -38,8 +38,8 @@ public abstract class AbstractProductService {
 
     // ===== VALIDATION METHODS =====
     protected void validateProductData(ProductDTO ProductDTO) {
-        if (!StringUtils.hasText(ProductDTO.getCode())) {
-            throw new IllegalArgumentException("Product code is required");
+        if (!StringUtils.hasText(ProductDTO.getSku())) {
+            throw new IllegalArgumentException("Product SKU is required");
         }
 
         validateSKU(ProductDTO.getSku());

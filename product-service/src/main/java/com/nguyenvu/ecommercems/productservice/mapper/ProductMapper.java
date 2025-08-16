@@ -26,7 +26,6 @@ public interface ProductMapper {
      * Convert Product entity to ProductDTO
      */
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "code", source = "code")
     @Mapping(target = "sku", source = "sku")
     @Mapping(target = "type", source = "type")
     @Mapping(target = "title", source = "title")

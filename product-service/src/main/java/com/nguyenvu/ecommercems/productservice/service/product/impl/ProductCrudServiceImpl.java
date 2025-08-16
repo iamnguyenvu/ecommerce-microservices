@@ -9,7 +9,7 @@ import com.nguyenvu.ecommercems.productservice.service.product.base.AbstractProd
 import com.nguyenvu.ecommercems.productservice.service.product.validation.ProductValidator;
 import com.nguyenvu.ecommercems.productservice.service.shared.cache.ProductCacheService;
 import com.nguyenvu.ecommercems.productservice.service.shared.constants.ProductServiceConstants;
-import com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer.ProductDomainEventPublisher;
+import com.nguyenvu.ecommercems.productservice.service.shared.event.publisher.ProductDomainEventPublisher;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductNotFoundException;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductServiceException;
 import com.nguyenvu.ecommercems.productservice.service.shared.exception.ProductValidationException;
@@ -41,9 +41,6 @@ public class ProductCrudServiceImpl extends AbstractProductService implements Pr
     private final ProductDomainEventPublisher eventPublisher;
     private final ProductCacheService cacheService;
 
-    /**
-     * Create a new Product with full validation and event publishing
-     */
     @Override
     public ProductDTO createProduct(ProductDTO ProductDTO) {
         log.debug("Creating new Product: {}", ProductDTO.getTitle());
@@ -316,8 +313,8 @@ public class ProductCrudServiceImpl extends AbstractProductService implements Pr
         LocalDateTime now = LocalDateTime.now();
         if (Product.getId() == null) {
             Product.setCreatedAt(now);
-            if (!StringUtils.hasText(Product.getCode())) {
-                Product.setCode(generateProductCode());
+            if (!StringUtils.hasText(Product.getSku())) {
+                Product.setSku(generateProductSku());
             }
         }
         Product.setUpdatedAt(now);
@@ -335,7 +332,7 @@ public class ProductCrudServiceImpl extends AbstractProductService implements Pr
         
         eventPublisher.publishProductCreatedEvent(
             Product.getId(), 
-            Product.getCode(), 
+            Product.getSku(), 
             Product.getSku(),
             Product.getTitle(),
             LocalDateTime.now()
@@ -384,10 +381,10 @@ public class ProductCrudServiceImpl extends AbstractProductService implements Pr
     // ===== UTILITY METHODS =====
 
     /**
-     * Generate unique Product code
+     * Generate unique SKU for Product
      */
-    private String generateProductCode() {
-        return "Product-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    private String generateProductSku() {
+        return "PROD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
     /**

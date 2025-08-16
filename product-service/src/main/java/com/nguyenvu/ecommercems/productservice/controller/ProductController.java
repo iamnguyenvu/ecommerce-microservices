@@ -61,7 +61,7 @@ public class ProductController {
         
         log.info("GET /api/v1/products/{}", id);
         
-        ProductDTO Product = productService.getBookById(id);
+        ProductDTO Product = productService.getProductById(id);
         return ResponseEntity.ok(Product);
     }
 
@@ -76,7 +76,7 @@ public class ProductController {
         
         log.info("GET /api/v1/products/code/{}", code);
         
-        ProductDTO Product = productService.getBookByCode(code);
+        ProductDTO Product = productService.getProductByCode(code);
         return ResponseEntity.ok(Product);
     }
 
@@ -89,9 +89,9 @@ public class ProductController {
             @Parameter(description = "Product ISBN", required = true)
             @PathVariable String isbn) {
         
-        log.info("GET /api/v1/products/isbn/{}", isbn);
+        log.info("GET /api/v1/products/sku/{}", isbn);
         
-        ProductDTO Product = productService.getBookByIsbn(isbn);
+        ProductDTO Product = productService.getProductBySku(isbn);
         return ResponseEntity.ok(Product);
     }
 
@@ -105,7 +105,7 @@ public class ProductController {
         
         log.info("POST /api/v1/products - title: {}", ProductDTO.getTitle());
         
-        ProductDTO savedProduct = productService.saveBook(ProductDTO);
+        ProductDTO savedProduct = productService.saveProduct(ProductDTO);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
@@ -121,7 +121,7 @@ public class ProductController {
         
         log.info("PUT /api/v1/products/{} - title: {}", id, ProductDTO.getTitle());
         
-        ProductDTO updatedProduct = productService.updateBook(id, ProductDTO);
+        ProductDTO updatedProduct = productService.updateProduct(id, ProductDTO);
         return ResponseEntity.ok(updatedProduct);
     }
 
@@ -136,7 +136,7 @@ public class ProductController {
         
         log.info("DELETE /api/v1/products/{}", id);
         
-        productService.deleteBook(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -405,7 +405,7 @@ public class ProductController {
         log.info("GET /api/v1/products/validate/code/{}", code);
         
         try {
-            ProductDTO existingProduct = productService.getBookByCode(code);
+            ProductDTO existingProduct = productService.getProductByCode(code);
             // If we get here, Product exists
             Map<String, Object> response = Map.of(
                 "available", false,
@@ -436,7 +436,7 @@ public class ProductController {
             @RequestParam(defaultValue = "50") int limit) {
         log.info("GET /api/v1/products/Suppliers/id/{} - limit: {}", authorId, limit);
 
-        List<ProductDTO> products = productService.getProductsByAuthor(authorId, limit);
+        List<ProductDTO> products = productService.getProductsBySupplier(authorId, limit);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -456,7 +456,7 @@ public class ProductController {
             @RequestParam(defaultValue = "50") int limit) {
         log.info("GET /api/v1/products/Suppliers/name/{} - limit: {}", authorName, limit);
 
-        List<ProductDTO> products = productService.getProductsByAuthorName(authorName, limit);
+        List<ProductDTO> products = productService.getProductsBySupplierName(authorName, limit);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -477,9 +477,9 @@ public class ProductController {
             @PathVariable String publisherId,
             @RequestParam(defaultValue = "50") int limit) {
 
-        log.info("GET /api/v1/products/publishers/id/{} - limit: {}", publisherId, limit);
+        log.info("GET /api/v1/products/manufacturers/id/{} - limit: {}", publisherId, limit);
 
-        List<ProductDTO> products = productService.getProductsByPublisher(publisherId, limit);
+        List<ProductDTO> products = productService.getProductsByManufacturer(publisherId, limit);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -498,9 +498,9 @@ public class ProductController {
             @PathVariable String publisherName,
             @RequestParam(defaultValue = "50") int limit) {
 
-        log.info("GET /api/v1/products/publishers/name/{} - limit: {}", publisherName, limit);
+        log.info("GET /api/v1/products/manufacturers/name/{} - limit: {}", publisherName, limit);
 
-        List<ProductDTO> products = productService.getProductsByPublisherName(publisherName, limit);
+        List<ProductDTO> products = productService.getProductsByManufacturerName(publisherName, limit);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();

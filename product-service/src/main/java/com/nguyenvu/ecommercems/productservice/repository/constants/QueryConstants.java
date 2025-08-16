@@ -14,7 +14,7 @@ public final class QueryConstants {
     /**
      * Filter for active products only
      */
-    public static final String ACTIVE_Products_FILTER = """
+    public static final String ACTIVE_PRODUCTS_FILTER = """
         { 'status': 'ACTIVE', 'deleted': false }
         """;
 

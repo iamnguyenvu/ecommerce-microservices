@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class SalesRecordedEvent {
     
-    String bookId;
+    String productId;
     String orderId;
     Integer quantitySold;
     BigDecimal unitPrice;

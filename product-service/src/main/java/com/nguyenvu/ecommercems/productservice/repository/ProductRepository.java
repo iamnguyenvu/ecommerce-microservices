@@ -24,24 +24,24 @@ import static com.nguyenvu.ecommercems.productservice.repository.constants.Query
 public interface ProductRepository extends MongoRepository<Product, String> {
 
     // ===== BASIC FINDERS =====
-    @Query("{'code': ?0, " + ACTIVE_Products_FILTER + "}")
-    Optional<Product> findByCode(String code);
+    @Query("{'sku': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
+    Optional<Product> findBySku(String sku);
 
-    @Query("{'isbn': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'isbn': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     Optional<Product> findByIsbn(String isbn);
 
-    @Query("{'status': ?0, 'availability':  ?1, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'status': ?0, 'availability':  ?1, " + ACTIVE_PRODUCTS_FILTER + "}")
     Optional<Product> findByStatusAndAvailability(ProductStatus status, Availability availability);
 
     // ===== VALIDATION METHODS =====
-    @Query(value = "{'code': ?0}", count = true)
-    long countByCode(String code);
+    @Query("{'sku': ?0}")
+    boolean existsBySku(String sku);
+
+    @Query("{'sku': ?0, '_id': {'$ne': ?1}}")
+    boolean existsBySkuAndIdNot(String sku, String id);
 
     @Query(value = "{'isbn': ?0}", count = true)
     long countByIsbn(String isbn);
-
-    @Query("{'code': ?0, '_id': {'$ne': ?1}}")
-    boolean existsByCodeAndIdNot(String code, String id);
 
     @Query("{'isbn': ?0}")
     boolean existsByIsbn(String isbn);
@@ -49,92 +49,83 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     @Query("{'isbn': ?0, '_id': {'$ne': ?1}}")
     boolean existsByIsbnAndIdNot(String isbn, String id);
 
-    @Query("{'sku': ?0}")
-    boolean existsBySku(String sku);
-
-    @Query("{'sku': ?0, '_id': {'$ne': ?1}}")
-    boolean existsBySkuAndIdNot(String sku, String id);
-
-    @Query("{'code': ?0}")
-    boolean existsByCode(String code);
-
     // ===== SEARCH QUERIES =====
-    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
+    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
     List<Product> searchByTitleAndAuthor(String searchText);
 
-    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_TITLE_ASC + "}")
+    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_TITLE_ASC + "}")
     List<Product> searchByTitle(String searchText);
 
-    @Query(value = "{'categories.categoryId': ?0, 'pricing.salePrice': {'$gte': ?1, '$lte': ?2}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
+    @Query(value = "{'categories.categoryId': ?0, 'pricing.salePrice': {'$gte': ?1, '$lte': ?2}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
     List<Product> searchByCategoryAndPriceRange(String categoryId, BigDecimal minPrice, BigDecimal maxPrice);
 
-    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
+    @Query(value = "{'$text': {'$search': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
     List<Product> searchByTitleWithSorting(String searchText);
 
     // ===== CATEGORY QUERIES =====
-    @Query(value = "{'categories.categoryId': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'categories.categoryId': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByCategoryId(String categoryId);
 
-    @Query(value = "{'categories.categoryId': {'$in': ?0}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'categories.categoryId': {'$in': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByMultipleCategories(List<String> categories);
 
-    @Query(value = "{'categories.path': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'categories.path': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByCategoryPath(String categoryPath);
 
     // ===== Supplier QUERIES =====
-    @Query(value = "{'Suppliers.authorId': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Suppliers.authorId': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByAuthorId(String authorId);
 
-    @Query(value = "{'Suppliers.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Suppliers.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByAuthorName(String authorName);
 
-    @Query(value = "{'Suppliers.role': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Suppliers.role': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByAuthorRole(String SupplierRole);
 
-    @Query(value = "{'Suppliers.name': {'$in': ?0}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Suppliers.name': {'$in': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByMultipleAuthors(List<String> authorNames);
 
     // ===== Manufacturer QUERIES =====
-    @Query(value = "{'Manufacturer.publisherId': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Manufacturer.publisherId': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByPublisherId(String publisherId);
 
-    @Query(value = "{'Manufacturer.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'Manufacturer.name': {'$regex': ?0, " + CASE_INSENSITIVE + "}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByPublisherName(String publisherName);
 
-    @Query(value = "{'publishedDate': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PUBLISHED_DESC + "}")
+    @Query(value = "{'publishedDate': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PUBLISHED_DESC + "}")
     List<Product> findByPublishedDateRange(LocalDate startDate, LocalDate endDate);
 
     // ===== SERIES QUERIES =====
-    @Query(value = "{'seriesId': ?0, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
+    @Query(value = "{'seriesId': ?0, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
     List<Product> findBySeriesId(String seriesId);
 
     @Query(value = "{'seriesId': ?0, " + ACTIVE_IN_STOCK_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
     List<Product> findAvailableProductsInSeries(String seriesId);
 
-    @Query(value = "{'seriesId': ?0, 'seriesVolume': {'$gt': ?1}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
+    @Query(value = "{'seriesId': ?0, 'seriesVolume': {'$gt': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
     List<Product> findNextProductsInSeries(String seriesId, Integer currentVolume);
 
-    @Query(value = "{'seriesName': ?0, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
+    @Query(value = "{'seriesName': ?0, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_SERIES_VOLUME + "}")
     List<Product> findBySeriesName(String seriesName);
 
     // ===== PRICING QUERIES =====
-    @Query(value = "{'pricing.salePrice': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
+    @Query(value = "{'pricing.salePrice': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
     List<Product> findByPriceRange(BigDecimal minPrice, BigDecimal maxPrice);
 
-    @Query(value = "{'$expr': {'$lt': ['$pricing.salePrice', '$pricing.listPrice']}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
+    @Query(value = "{'$expr': {'$lt': ['$pricing.salePrice', '$pricing.listPrice']}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
     List<Product> findDiscountedProducts();
 
-    @Query(value = "{'pricing.salePrice': {'$lt': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
+    @Query(value = "{'pricing.salePrice': {'$lt': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PRICE_ASC + "}")
     List<Product> findProductsUnderPrice(BigDecimal price);
 
     // ===== STOCK & AVAILABILITY QUERIES =====
-    @Query("{'availability': " + IN_STOCK + ", 'stockQuantity': {'$gt': 0}, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'availability': " + IN_STOCK + ", 'stockQuantity': {'$gt': 0}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findAvailableProducts();
 
-    @Query("{'stockQuantity': {'$lt': ?0, '$gt': 0}, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'stockQuantity': {'$lt': ?0, '$gt': 0}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findLowStockProducts(Integer threshold);
 
-    @Query("{'availability': " + OUT_OF_STOCK + ", " + ACTIVE_Products_FILTER + "}")
+    @Query("{'availability': " + OUT_OF_STOCK + ", " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findOutOfStockProducts();
 
     // ===== HIGH-PERFORMANCE QUERIES (Using direct values for frequently called methods) =====
@@ -156,7 +147,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     // ===== RATING QUERIES =====
 
     // ===== RATING QUERIES =====
-    @Query(value = "{'rating.average': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}")
+    @Query(value = "{'rating.average': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByRatingRange(Double minRating, Double maxRating);
 
     @Query("{'_id': ?0}")
@@ -173,24 +164,24 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     /*
         * Find Product rating >= threshold.
      */
-    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
+    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
     List<Product> findHighRatedProducts(Double minRating);
 
-    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", 
+    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", 
             sort = "{'rating.average': -1, 'rating.totalRatings': -1}")
     List<Product> findTopRatedProducts(Double minRating, Pageable pageable);
 
-    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
+    @Query(value = "{'rating.average': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
     List<Product> findByMinimumRating(Double minRating);
 
-    @Query(value = "{'rating.average': {'$gte': " + HIGH_RATING_THRESHOLD + "}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
+    @Query(value = "{'rating.average': {'$gte': " + HIGH_RATING_THRESHOLD + "}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_RATING_DESC + "}")
     List<Product> findHighlyRatedProducts();
 
-    @Query(value = "{'rating.count': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_RATING_COUNT_DESC + "}")
+    @Query(value = "{'rating.count': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_RATING_COUNT_DESC + "}")
     List<Product> findProductsWithMostReviews(Integer minReviewCount);
 
     // ===== FEATURED QUERIES =====
-    @Query(value = "{'featured.featuredType': ?0, " + ACTIVE_Products_FILTER + "}", sort = "{'featured.featuredUntil': -1}")
+    @Query(value = "{'featured.featuredType': ?0, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{'featured.featuredUntil': -1}")
     List<Product> findFeaturedProductsByType(String featuredType);
 
     @Query(value = "{" + NEW_RELEASES_FILTER + ", " + ACTIVE_IN_STOCK_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
@@ -213,32 +204,32 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
 
     // ===== DATE RANGE QUERIES =====
-    @Query(value = "{'createdAt': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
+    @Query(value = "{'createdAt': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_DATE_DESC + "}")
     List<Product> findRecentlyAddedProducts(LocalDateTime sinceDate);
 
-    @Query(value = "{'publishedDate': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}", sort = "{" + SORT_BY_PUBLISHED_DESC + "}")
+    @Query(value = "{'publishedDate': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{" + SORT_BY_PUBLISHED_DESC + "}")
     List<Product> findProductsPublishedInRange(LocalDate startDate, LocalDate endDate);
 
-    @Query(value = "{'updatedAt': {'$gte': ?0}, " + ACTIVE_Products_FILTER + "}", sort = "{'updatedAt': -1}")
+    @Query(value = "{'updatedAt': {'$gte': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}", sort = "{'updatedAt': -1}")
     List<Product> findRecentlyUpdatedProducts(LocalDateTime sinceDate);
 
     // ===== AGGREGATION QUERIES =====
     @Aggregation(pipeline = {
-            "{ '$match': { 'sales.totalSold': { '$gt': 0 }, " + ACTIVE_Products_FILTER + " } }",
+            "{ '$match': { 'sales.totalSold': { '$gt': 0 }, " + ACTIVE_PRODUCTS_FILTER + " } }",
             "{ '$sort': { 'sales.totalSold': -1 } }",
             "{ '$limit': 10 }"
     })
     List<Product> findTopBestsellingProducts();
 
     @Aggregation(pipeline = {
-            "{ '$match': { 'rating.count': { '$gte': ?0 }, " + ACTIVE_Products_FILTER + " } }",
+            "{ '$match': { 'rating.count': { '$gte': ?0 }, " + ACTIVE_PRODUCTS_FILTER + " } }",
             "{ '$sort': { 'rating.average': -1 } }",
             "{ '$limit': 10 }"
     })
     List<Product> findTopRatedProductsWithMinReviews(Integer minReviewCount);
 
     @Aggregation(pipeline = {
-            "{ '$match': { " + ACTIVE_Products_FILTER + " } }",
+            "{ '$match': { " + ACTIVE_PRODUCTS_FILTER + " } }",
             "{ '$unwind': '$categories' }",
             "{ '$group': { '_id': '$categories.categoryId', 'count': { '$sum': 1 }, 'averagePrice': { '$avg': '$pricing.salePrice' } } }",
             "{ '$sort': { 'count': -1 } }"
@@ -246,7 +237,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Object> findCategoryStatistics();
 
     @Aggregation(pipeline = {
-            "{ '$match': { " + ACTIVE_Products_FILTER + " } }",
+            "{ '$match': { " + ACTIVE_PRODUCTS_FILTER + " } }",
             "{ '$group': { '_id': '$categories.categoryId', 'minPrice': { '$min': '$pricing.salePrice' }, 'maxPrice': { '$max': '$pricing.salePrice' }, 'avgPrice': { '$avg': '$pricing.salePrice' } } }",
             "{ '$sort': { 'avgPrice': 1 } }"
     })
@@ -266,33 +257,33 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findProductsNeedingRestock();
 
     // ===== PAGINATED QUERIES =====
-    @Query("{'categories.categoryId': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'categories.categoryId': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     Page<Product> findByCategoryIdWithPagination(String categoryId, Pageable pageable);
 
-    @Query("{'pricing.salePrice': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'pricing.salePrice': {'$gte': ?0, '$lte': ?1}, " + ACTIVE_PRODUCTS_FILTER + "}")
     Page<Product> findByPriceRangeWithPagination(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 
-    @Query("{'Suppliers.name': " + REGEX_IGNORE_CASE + ", " + ACTIVE_Products_FILTER + "}")
+    @Query("{'Suppliers.name': " + REGEX_IGNORE_CASE + ", " + ACTIVE_PRODUCTS_FILTER + "}")
     Page<Product> findByAuthorNameWithPagination(String authorName, Pageable pageable);
 
     // ===== BULK OPERATIONS =====
     @Query("{'_id': {'$in': ?0}}")
     List<Product> findByIdIn(List<String> ids);
 
-    @Query("{'categories.categoryId': {'$in': ?0}, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'categories.categoryId': {'$in': ?0}, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByCategoryIdIn(List<String> categoryIds);
 
     // ===== ADVANCED SEARCH SUPPORT =====
-    @Query("{'title': " + REGEX_IGNORE_CASE + ", " + ACTIVE_Products_FILTER + "}")
+    @Query("{'title': " + REGEX_IGNORE_CASE + ", " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByTitleContainingIgnoreCase(String title);
 
-    @Query("{'description': " + REGEX_IGNORE_CASE + ", " + ACTIVE_Products_FILTER + "}")
+    @Query("{'description': " + REGEX_IGNORE_CASE + ", " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByDescriptionContainingIgnoreCase(String description);
 
-    @Query("{'physical.language': " + REGEX_IGNORE_CASE + ", " + ACTIVE_Products_FILTER + "}")
+    @Query("{'physical.language': " + REGEX_IGNORE_CASE + ", " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByLanguage(String language);
 
-    @Query("{'physical.format': ?0, " + ACTIVE_Products_FILTER + "}")
+    @Query("{'physical.format': ?0, " + ACTIVE_PRODUCTS_FILTER + "}")
     List<Product> findByFormat(String format);
 
     // ===== STOCK MANAGEMENT QUERIES =====

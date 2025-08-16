@@ -18,31 +18,31 @@ public interface InventoryService {
     /**
      * Update stock level for a Product
      */
-    ApiResponse updateStock(String bookId, Integer quantity);
+    ApiResponse updateStock(String productId, Integer quantity);
     
     /**
      * Reserve stock for pending order
      */
-    ApiResponse reserveStock(String bookId, Integer quantity,String orderId);
+    ApiResponse reserveStock(String productId, Integer quantity,String orderId);
     
     /**
      * Release reserved stock (when order cancelled)
      */
-    ApiResponse releaseReservedStock(String orderId);
+    ApiResponse releaseReservedStock(String productId, Integer quantity, String orderId);
 
     ApiResponse confirmReservedStock(String orderId);
 
-    List<StockMovementDTO> getStockHistory(String bookId, LocalDateTime from, LocalDateTime to);
+    List<StockMovementDTO> getStockHistory(String productId, LocalDateTime from, LocalDateTime to);
     
     /**
      * Get current stock level
      */
-    Integer getCurrentStock(String bookId);
+    Integer getCurrentStock(String productId);
     
     /**
      * Get available stock (total - reserved)
      */
-    Integer getAvailableStock(String bookId);
+    Integer getAvailableStock(String productId);
     
     /**
      * Get products with low stock
@@ -57,11 +57,11 @@ public interface InventoryService {
     /**
      * Check if Product is in stock
      */
-    boolean isInStock(String bookId);
+    boolean isInStock(String productId);
 
     /**
      * Check if Product is available
      */
-    boolean isAvailable(String bookId, Integer quantity);
+    boolean isAvailable(String productId, Integer quantity);
 
 }

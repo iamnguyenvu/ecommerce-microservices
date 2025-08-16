@@ -2,6 +2,7 @@ package com.nguyenvu.ecommercems.productservice.service.feature.supplier;
 
 import com.nguyenvu.ecommercems.productservice.dto.ProductDTO;
 import com.nguyenvu.ecommercems.productservice.dto.SupplierDTO;
+import com.nguyenvu.ecommercems.productservice.dto.SupplierStatsDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,43 +34,20 @@ public interface SupplierService {
     /**
      * Get products by multiple Suppliers
      */
-    Page<ProductDTO> getProductsByAuthors(List<String> authorIds, Pageable pageable);
+    Page<ProductDTO> getProductsBySuppliers(List<String> supplierIds, Pageable pageable);
     
     /**
      * Search Suppliers by name
      */
-    List<AuthorDTO> searchAuthors(String searchTerm);
+    List<SupplierDTO> searchSuppliers(String searchTerm);
     
     /**
      * Get popular Suppliers (by Product count or ratings)
      */
-    List<AuthorDTO> getPopularAuthors(int limit);
+    List<SupplierDTO> getPopularSuppliers(int limit);
     
     /**
      * Get Supplier statistics
      */
-    AuthorStatsDTO getAuthorStats(String authorId);
-}
-
-// Supporting DTOs
-class AuthorDTO {
-    private String id;
-    private String name;
-    private String biography;
-    private String nationality;
-    private Integer birthYear;
-    private String imageUrl;
-    private Integer bookCount;
-    private Double averageRating;
-    // getters, setters, constructors
-}
-
-class AuthorStatsDTO {
-    private String authorId;
-    private String authorName;
-    private Integer totalProducts;
-    private Double averageRating;
-    private Long totalRatings;
-    private String mostPopularBook;
-    // getters, setters, constructors
+    SupplierStatsDTO getSupplierStats(String supplierId);
 }

@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Get Product by ID with exception handling
      */
-    public ProductDTO getBookById(String id) {
+    public ProductDTO getProductById(String id) {
         log.debug("Getting Product by ID: {}", id);
         return ProductRepository.findById(id)
                 .map(this::convertToDTO)
@@ -66,44 +66,43 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Get Product by code
+     * Get Product by code - Delegated to SKU method
      */
-    public ProductDTO getBookByCode(String code) {
-        log.debug("Getting Product by code: {}", code);
-        return ProductRepository.findByCode(code)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with code: " + code));
+    public ProductDTO getProductByCode(String code) {
+        log.debug("Getting Product by code (using SKU): {}", code);
+        // For backward compatibility, treat code as SKU
+        return getProductBySku(code);
     }
 
     /**
-     * Get Product by ISBN
+     * Get Product by SKU
      * SAMPLE IMPLEMENTATION - COMPLETED
      */
-    public ProductDTO getBookByIsbn(String isbn) {
-        log.debug("Getting Product by ISBN: {}", isbn);
+    public ProductDTO getProductBySku(String sku) {
+        log.debug("Getting Product by SKU: {}", sku);
 
-        // Validate ISBN format
-        if (!StringUtils.hasText(isbn)) {
-            throw new IllegalArgumentException("ISBN is required");
+        // Validate SKU format
+        if (!StringUtils.hasText(sku)) {
+            throw new IllegalArgumentException("SKU is required");
         }
 
-        // Clean ISBN (remove hyphens and spaces)
-        String cleanIsbn = isbn.replaceAll("[-\\s]", "");
-        if (cleanIsbn.length() != 10 && cleanIsbn.length() != 13) {
-            throw new IllegalArgumentException("ISBN must be 10 or 13 digits");
+        // Basic SKU validation (can be enhanced)
+        if (sku.length() < 3) {
+            throw new IllegalArgumentException("SKU must be at least 3 characters");
         }
 
         // Call repository method
-        return ProductRepository.findByIsbn(cleanIsbn)
+        return ProductRepository.findBySku(sku)
                 .map(this::convertToDTO)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ISBN: " + isbn));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with SKU: " + sku));
     }
 
     /**
      * Save new Product with validation
      */
     @Transactional
-    public ProductDTO saveBook(ProductDTO ProductDTO) {
+    @Override
+    public ProductDTO saveProduct(ProductDTO ProductDTO) {
         log.info("Saving new Product: {}", ProductDTO.getTitle());
 
         // Basic validation
@@ -128,7 +127,8 @@ public class ProductServiceImpl implements ProductService {
      * Update Product (partial update)
      */
     @Transactional
-    public ProductDTO updateBook(String id, ProductDTO ProductDTO) {
+    @Override
+    public ProductDTO updateProduct(String id, ProductDTO ProductDTO) {
         log.info("Updating Product with ID: {}", id);
 
         Product Product = ProductRepository.findById(id)
@@ -148,16 +148,17 @@ public class ProductServiceImpl implements ProductService {
      * Delete Product (soft delete)
      */
     @Transactional
-    public void deleteBook(String id) {
+    @Override
+    public void deleteProduct(String id) {
         log.info("Soft deleting Product with ID: {}", id);
 
-        Product Product = ProductRepository.findById(id)
+        Product product = ProductRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
 
-        Product.setStatus(ProductStatus.INACTIVE);
-        Product.setUpdatedAt(LocalDateTime.now());
+        product.setStatus(ProductStatus.INACTIVE);
+        product.setUpdatedAt(LocalDateTime.now());
 
-        ProductRepository.save(Product);
+        ProductRepository.save(product);
         log.info("Successfully soft deleted Product with ID: {}", id);
     }
 
@@ -967,8 +968,8 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Product title is required");
         }
 
-        if (!StringUtils.hasText(ProductDTO.getCode())) {
-            throw new IllegalArgumentException("Product code is required");
+        if (!StringUtils.hasText(ProductDTO.getSku())) {
+            throw new IllegalArgumentException("Product SKU is required");
         }
 
         if (StringUtils.hasText(ProductDTO.getSku())) {
@@ -1047,12 +1048,69 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Check if user can rate this Product
      */
-    public boolean canUserRate(String bookId, String userId) {
+    public boolean canUserRate(String productId, String userId) {
         // For now, simple check - can be enhanced with purchase verification
-        Product Product = ProductRepository.findById(bookId)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + bookId));
+        Product product = ProductRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + productId));
         
-        return Product.getStatus() == ProductStatus.ACTIVE;
+        return product.getStatus() == ProductStatus.ACTIVE;
+    }
+
+    // ===== SUPPLIER OPERATIONS =====
+    
+    @Override
+    public List<ProductDTO> getProductsBySupplier(String supplierId, int limit) {
+        log.debug("Getting products by supplier ID: {} with limit: {}", supplierId, limit);
+        // Implementation using MongoDB query
+        Query query = new Query(Criteria.where("suppliers.supplierId").is(supplierId)
+                .and("status").is(ProductStatus.ACTIVE));
+        query.limit(limit);
+        
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        return products.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+    
+    @Override
+    public List<ProductDTO> getProductsBySupplierName(String supplierName, int limit) {
+        log.debug("Getting products by supplier name: {} with limit: {}", supplierName, limit);
+        Query query = new Query(Criteria.where("suppliers.name").regex(supplierName, "i")
+                .and("status").is(ProductStatus.ACTIVE));
+        query.limit(limit);
+        
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        return products.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    // ===== MANUFACTURER OPERATIONS =====
+    
+    @Override
+    public List<ProductDTO> getProductsByManufacturer(String manufacturerId, int limit) {
+        log.debug("Getting products by manufacturer ID: {} with limit: {}", manufacturerId, limit);
+        Query query = new Query(Criteria.where("manufacturer.manufacturerId").is(manufacturerId)
+                .and("status").is(ProductStatus.ACTIVE));
+        query.limit(limit);
+        
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        return products.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+    
+    @Override
+    public List<ProductDTO> getProductsByManufacturerName(String manufacturerName, int limit) {
+        log.debug("Getting products by manufacturer name: {} with limit: {}", manufacturerName, limit);
+        Query query = new Query(Criteria.where("manufacturer.name").regex(manufacturerName, "i")
+                .and("status").is(ProductStatus.ACTIVE));
+        query.limit(limit);
+        
+        List<Product> products = mongoTemplate.find(query, Product.class);
+        return products.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
     // ===== TODO: BẠN TỰ THÊM CÁC METHODS KHÁC Ở ĐÂY =====

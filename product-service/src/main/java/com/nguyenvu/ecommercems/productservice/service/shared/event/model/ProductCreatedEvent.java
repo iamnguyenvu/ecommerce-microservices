@@ -11,9 +11,9 @@ import java.time.OffsetDateTime;
 @Builder
 public class ProductCreatedEvent {
     
-    String bookId;
+    String productId;
     String code;
-    String isbn;
+    String sku;
     String title;
     OffsetDateTime occurredAt;
 }

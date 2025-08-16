@@ -1,4 +1,4 @@
-﻿package com.nguyenvu.ecommercems.productservice.service;
+package com.nguyenvu.ecommercems.productservice.service;
 
 import com.nguyenvu.ecommercems.productservice.dto.ApiResponse;
 import com.nguyenvu.ecommercems.productservice.dto.ProductRatingRequest;
@@ -366,7 +366,7 @@ class ProductServiceRatingTest {
 
             assertThat(data.get("totalRatings")).isEqualTo(3);
             assertThat(data.get("userRating")).isEqualTo(5.0);
-            // newAverage should be calculated: (3.0*2 + 5.0)/3 = 11/3 â‰ˆ 3.7
+            // newAverage should be calculated: (3.0*2 + 5.0)/3 = 11/3 ≈ 3.7
             assertThat(data.get("newAverage")).isEqualTo(3.7);
         }
     }

@@ -1,4 +1,4 @@
-package com.nguyenvu.ecommercems.productservice.service.shared.event.Manufacturer;
+package com.nguyenvu.ecommercems.productservice.service.shared.event.publisher;
 
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.ProductCreatedEvent;
 import com.nguyenvu.ecommercems.productservice.service.shared.event.model.ProductUpdatedEvent;
@@ -46,7 +46,7 @@ public interface ProductDomainEventPublisher {
     /**
      * Convenience method to publish Product created event
      */
-    void publishProductCreatedEvent(String productId, String code, String isbn, String title, LocalDateTime occurredAt);
+    void publishProductCreatedEvent(String productId, String code, String sku, String title, LocalDateTime occurredAt);
     
     /**
      * Convenience method to publish Product updated event

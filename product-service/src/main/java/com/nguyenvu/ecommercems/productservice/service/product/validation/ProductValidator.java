@@ -273,10 +273,10 @@ public class ProductValidator {
             }
         }
         
-        // Check code uniqueness if provided
-        if (StringUtils.hasText(Product.getCode())) {
-            if (ProductRepository.existsByCode(Product.getCode())) {
-                throw new ProductValidationException("Product with code '" + Product.getCode() + "' already exists");
+        // Check SKU uniqueness if provided
+        if (StringUtils.hasText(Product.getSku())) {
+            if (ProductRepository.existsBySku(Product.getSku())) {
+                throw new ProductValidationException("Product with SKU '" + Product.getSku() + "' already exists");
             }
         }
     }
@@ -292,10 +292,10 @@ public class ProductValidator {
             }
         }
         
-        // Code typically shouldn't change in updates
-        if (StringUtils.hasText(Product.getCode())) {
-            if (ProductRepository.existsByCodeAndIdNot(Product.getCode(), currentBookId)) {
-                throw new ProductValidationException("Product with code '" + Product.getCode() + "' already exists");
+        // SKU typically shouldn't change in updates
+        if (StringUtils.hasText(Product.getSku())) {
+            if (ProductRepository.existsBySkuAndIdNot(Product.getSku(), currentBookId)) {
+                throw new ProductValidationException("Product with SKU '" + Product.getSku() + "' already exists");
             }
         }
     }

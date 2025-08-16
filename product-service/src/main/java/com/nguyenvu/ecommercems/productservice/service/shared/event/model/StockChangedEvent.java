@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Builder
 public class StockChangedEvent {
     
-    String bookId;
+    String productId;
     Integer oldStock;
     Integer newStock;
     Integer delta;

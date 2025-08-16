@@ -27,10 +27,7 @@ public class Product {
     
     // ===== THÔNG TIN CƠ BẢN =====
     @Indexed(unique = true)
-    private String code;                    // Mã sản phẩm nội bộ (PROD2024001)
-    
-    @Indexed
-    private String sku;                     // Stock Keeping Unit
+    private String sku;                     // Stock Keeping Unit - Mã định danh business
 
     private ProductType type;
     

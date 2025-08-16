@@ -200,9 +200,9 @@ coverage/
 *.pid.lock
 
 # =================================================================
-# SENSITIVE DOCUMENTATION & DEVELOPMENT GUIDES
+# DOCUMENTATION & DEVELOPMENT NOTES (Internal Use Only)
 # =================================================================
-# Never commit internal development guides or migration docs
+# Internal technical documentation and analysis files
 *GUIDE*.md
 *_GUIDE.md
 *DETAILED*.md
@@ -212,8 +212,22 @@ coverage/
 *EXTRACT*.md
 *CONVERSION*.md
 *SUMMARY*.md
+*ROADMAP*.md
+*REVIEW*.md
+*SYSTEM*.md
+*COMPLETE*.md
+*COMPREHENSIVE*.md
 QUICK_START*.md
 TESTING_GUIDE.md
+
+# Service analysis and planning docs
+SERVICE_*.md
+PRODUCT_SERVICE_*.md
+
+# Development notes and temporary documentation
+NOTES*.md
+TODO*.md
+CHANGELOG_DRAFT*.md
 
 # =================================================================
 # MISC
